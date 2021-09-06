@@ -62,17 +62,17 @@ namespace UmbracoTranslationHelper
             translationTextbox.Focus();
         }
 
-        private void translationLinkLabel_Click(object sender, EventArgs e)
+        private void Button_Click(object sender, EventArgs e)
+        {
+            Close();
+        }
+
+        private void translationLinkLabel_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             using var browser = new Process();
             browser.StartInfo.FileName = $"https://translate.google.com/?sl=en&tl={TranslationCulture}&text={HttpUtility.UrlEncode(this.Original)}&op=translate";
             browser.StartInfo.UseShellExecute = true;
             browser.Start();
-        }
-
-        private void Button_Click(object sender, EventArgs e)
-        {
-            Close();
         }
     }
 }

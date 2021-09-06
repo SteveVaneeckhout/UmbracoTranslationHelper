@@ -140,7 +140,7 @@ namespace UmbracoTranslationHelper
             this.translationLinkLabel.TabIndex = 5;
             this.translationLinkLabel.TabStop = true;
             this.translationLinkLabel.Text = "Google Translate";
-            this.translationLinkLabel.Click += new System.EventHandler(this.translationLinkLabel_Click);
+            this.translationLinkLabel.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.translationLinkLabel_LinkClicked);
             // 
             // TranslationEditorForm
             // 

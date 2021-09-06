@@ -50,7 +50,7 @@ namespace UmbracoTranslationHelper
             this.okButton.Location = new System.Drawing.Point(925, 591);
             this.okButton.Name = "okButton";
             this.okButton.Size = new System.Drawing.Size(112, 34);
-            this.okButton.TabIndex = 0;
+            this.okButton.TabIndex = 7;
             this.okButton.Text = "OK";
             this.okButton.UseVisualStyleBackColor = true;
             this.okButton.Click += new System.EventHandler(this.Button_Click);
@@ -62,7 +62,7 @@ namespace UmbracoTranslationHelper
             this.cancelButton.Location = new System.Drawing.Point(807, 591);
             this.cancelButton.Name = "cancelButton";
             this.cancelButton.Size = new System.Drawing.Size(112, 34);
-            this.cancelButton.TabIndex = 1;
+            this.cancelButton.TabIndex = 6;
             this.cancelButton.Text = "Cancel";
             this.cancelButton.UseVisualStyleBackColor = true;
             // 
@@ -72,7 +72,7 @@ namespace UmbracoTranslationHelper
             this.originalLabel.Location = new System.Drawing.Point(18, 24);
             this.originalLabel.Name = "originalLabel";
             this.originalLabel.Size = new System.Drawing.Size(74, 25);
-            this.originalLabel.TabIndex = 2;
+            this.originalLabel.TabIndex = 1;
             this.originalLabel.Text = "Original";
             // 
             // originalTextbox
@@ -85,7 +85,7 @@ namespace UmbracoTranslationHelper
             this.originalTextbox.Name = "originalTextbox";
             this.originalTextbox.ReadOnly = true;
             this.originalTextbox.Size = new System.Drawing.Size(902, 262);
-            this.originalTextbox.TabIndex = 3;
+            this.originalTextbox.TabIndex = 2;
             // 
             // splitContainer
             // 
@@ -109,7 +109,7 @@ namespace UmbracoTranslationHelper
             this.splitContainer.Panel2.Controls.Add(this.translationTextbox);
             this.splitContainer.Size = new System.Drawing.Size(1025, 573);
             this.splitContainer.SplitterDistance = 286;
-            this.splitContainer.TabIndex = 4;
+            this.splitContainer.TabIndex = 0;
             // 
             // translationLabel
             // 
@@ -117,7 +117,7 @@ namespace UmbracoTranslationHelper
             this.translationLabel.Location = new System.Drawing.Point(10, 14);
             this.translationLabel.Name = "translationLabel";
             this.translationLabel.Size = new System.Drawing.Size(96, 25);
-            this.translationLabel.TabIndex = 4;
+            this.translationLabel.TabIndex = 3;
             this.translationLabel.Text = "Translation";
             // 
             // translationTextbox
@@ -129,7 +129,7 @@ namespace UmbracoTranslationHelper
             this.translationTextbox.Multiline = true;
             this.translationTextbox.Name = "translationTextbox";
             this.translationTextbox.Size = new System.Drawing.Size(902, 262);
-            this.translationTextbox.TabIndex = 5;
+            this.translationTextbox.TabIndex = 4;
             // 
             // translationLinkLabel
             // 
@@ -161,6 +161,7 @@ namespace UmbracoTranslationHelper
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Translation Editor";
+            this.Shown += new System.EventHandler(this.TranslationEditorForm_Shown);
             this.splitContainer.Panel1.ResumeLayout(false);
             this.splitContainer.Panel1.PerformLayout();
             this.splitContainer.Panel2.ResumeLayout(false);

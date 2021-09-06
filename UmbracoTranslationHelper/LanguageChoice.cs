@@ -7,11 +7,11 @@ namespace UmbracoTranslationHelper
 {
     public partial class LanguageChoice : Form
     {
-        public LanguageChoice(LanguageDisplay[] files)
+        public LanguageChoice(LanguageDisplay[] languages)
         {
             InitializeComponent();
 
-            languagesListbox.Items.AddRange(files);
+            languagesListbox.Items.AddRange(languages);
             okButton.Enabled = false;
         }
 
@@ -24,20 +24,18 @@ namespace UmbracoTranslationHelper
 
         private void languagesListbox_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (languagesListbox.SelectedItem != null)
-            {
-                okButton.Enabled = true;
-            }
-            else
-            {
-                okButton.Enabled = false;
-            }
+            okButton.Enabled = languagesListbox.SelectedItem != null;
         }
 
         private void languagesListbox_MouseDoubleClick(object sender, MouseEventArgs e)
         {
             DialogResult = DialogResult.OK;
             Close();
+        }
+
+        private void LanguageChoice_Shown(object sender, EventArgs e)
+        {
+            languagesListbox.Focus();
         }
     }
 }

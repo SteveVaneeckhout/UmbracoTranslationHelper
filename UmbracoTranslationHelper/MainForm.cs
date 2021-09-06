@@ -14,6 +14,7 @@ namespace UmbracoTranslationHelper
     public partial class MainForm : Form
     {
         private const string SubDirectory = @"src\Umbraco.Web.UI\umbraco\config\lang";
+
         public LanguageFile Original { get; set; }
         public LanguageFile Translations { get; set; }
 
@@ -168,7 +169,7 @@ namespace UmbracoTranslationHelper
         {
             var percent = ((decimal)l.TranslationCount / translationCount) * 100;
 
-            return $"{l.Language} - {percent:0}%";
+            return $"{l.Translations.LocalName} ({l.Culture}) - {percent:0}% complete";
         }
 
         private void exitToolStripMenuItem_Click(object sender, EventArgs e)
@@ -177,6 +178,19 @@ namespace UmbracoTranslationHelper
         }
 
         private void wordsListView_MouseDoubleClick(object sender, MouseEventArgs e)
+        {
+            OpenTranslationForm();
+        }
+
+        private void wordsListView_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (e.KeyChar == '\r')
+            {
+                OpenTranslationForm();
+            }
+        }
+
+        private void OpenTranslationForm()
         {
             if (wordsListView.SelectedItems.Count > 0)
             {
@@ -229,7 +243,7 @@ namespace UmbracoTranslationHelper
 
         private void saveToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            LanguageFile.Serialize(Translations, Path.Combine(UmbracoSourcePath, SubDirectory));
+            LanguageFile.Serialize(Translations.Translations, Path.Combine(UmbracoSourcePath, SubDirectory));
         }
 
         private void optionsMenuItem_Click(object sender, EventArgs e)

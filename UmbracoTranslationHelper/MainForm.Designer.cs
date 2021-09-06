@@ -77,7 +77,7 @@ namespace UmbracoTranslationHelper
             // 
             this.fileOpenMenuItem.Name = "fileOpenMenuItem";
             this.fileOpenMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.O)));
-            this.fileOpenMenuItem.Size = new System.Drawing.Size(270, 34);
+            this.fileOpenMenuItem.Size = new System.Drawing.Size(235, 34);
             this.fileOpenMenuItem.Text = "Open...";
             this.fileOpenMenuItem.Click += new System.EventHandler(this.fileOpenMenuItem_Click);
             // 
@@ -85,20 +85,20 @@ namespace UmbracoTranslationHelper
             // 
             this.saveToolStripMenuItem.Name = "saveToolStripMenuItem";
             this.saveToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.S)));
-            this.saveToolStripMenuItem.Size = new System.Drawing.Size(270, 34);
+            this.saveToolStripMenuItem.Size = new System.Drawing.Size(235, 34);
             this.saveToolStripMenuItem.Text = "Save";
             this.saveToolStripMenuItem.Click += new System.EventHandler(this.saveToolStripMenuItem_Click);
             // 
             // toolStripSeparator1
             // 
             this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(267, 6);
+            this.toolStripSeparator1.Size = new System.Drawing.Size(232, 6);
             // 
             // exitToolStripMenuItem
             // 
             this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
             this.exitToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Alt | System.Windows.Forms.Keys.F4)));
-            this.exitToolStripMenuItem.Size = new System.Drawing.Size(270, 34);
+            this.exitToolStripMenuItem.Size = new System.Drawing.Size(235, 34);
             this.exitToolStripMenuItem.Text = "Exit";
             this.exitToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
             // 
@@ -161,6 +161,7 @@ namespace UmbracoTranslationHelper
             this.wordsListView.TabIndex = 5;
             this.wordsListView.UseCompatibleStateImageBehavior = false;
             this.wordsListView.View = System.Windows.Forms.View.Details;
+            this.wordsListView.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.wordsListView_KeyPress);
             this.wordsListView.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.wordsListView_MouseDoubleClick);
             // 
             // AliasHeader

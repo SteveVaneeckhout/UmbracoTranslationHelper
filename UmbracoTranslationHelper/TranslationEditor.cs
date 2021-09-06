@@ -31,6 +31,10 @@ namespace UmbracoTranslationHelper
             set
             {
                 originalTextbox.Text = value;
+
+                // Allow Enter and Tab keys to be used in the editor in case of newlines.
+                translationTextbox.AcceptsReturn = value.Contains('\r');
+                translationTextbox.AcceptsTab = value.Contains('\r');
             }
         }
 
@@ -53,17 +57,22 @@ namespace UmbracoTranslationHelper
             InitializeComponent();
         }
 
-        private void Button_Click(object sender, EventArgs e)
+        private void TranslationEditorForm_Shown(object sender, EventArgs e)
         {
-            Close();
+            translationTextbox.Focus();
         }
 
         private void translationLinkLabel_Click(object sender, EventArgs e)
         {
-            using var compiler = new Process();
-            compiler.StartInfo.FileName = $"https://translate.google.com/?sl=en&tl={TranslationCulture}&text={HttpUtility.UrlEncode(this.Original)}&op=translate";
-            compiler.StartInfo.UseShellExecute = true;
-            compiler.Start();
+            using var browser = new Process();
+            browser.StartInfo.FileName = $"https://translate.google.com/?sl=en&tl={TranslationCulture}&text={HttpUtility.UrlEncode(this.Original)}&op=translate";
+            browser.StartInfo.UseShellExecute = true;
+            browser.Start();
+        }
+
+        private void Button_Click(object sender, EventArgs e)
+        {
+            Close();
         }
     }
 }

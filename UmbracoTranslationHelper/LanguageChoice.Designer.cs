@@ -42,7 +42,7 @@ namespace UmbracoTranslationHelper
             this.okButton.Location = new System.Drawing.Point(336, 610);
             this.okButton.Name = "okButton";
             this.okButton.Size = new System.Drawing.Size(112, 34);
-            this.okButton.TabIndex = 0;
+            this.okButton.TabIndex = 3;
             this.okButton.Text = "OK";
             this.okButton.UseVisualStyleBackColor = true;
             this.okButton.Click += new System.EventHandler(this.Button_Click);
@@ -55,7 +55,7 @@ namespace UmbracoTranslationHelper
             this.cancelButton.Location = new System.Drawing.Point(218, 610);
             this.cancelButton.Name = "cancelButton";
             this.cancelButton.Size = new System.Drawing.Size(112, 34);
-            this.cancelButton.TabIndex = 1;
+            this.cancelButton.TabIndex = 2;
             this.cancelButton.Text = "Cancel";
             this.cancelButton.UseVisualStyleBackColor = true;
             this.cancelButton.Click += new System.EventHandler(this.Button_Click);
@@ -71,7 +71,7 @@ namespace UmbracoTranslationHelper
             this.languagesListbox.Location = new System.Drawing.Point(12, 12);
             this.languagesListbox.Name = "languagesListbox";
             this.languagesListbox.Size = new System.Drawing.Size(436, 592);
-            this.languagesListbox.TabIndex = 2;
+            this.languagesListbox.TabIndex = 1;
             this.languagesListbox.SelectedIndexChanged += new System.EventHandler(this.languagesListbox_SelectedIndexChanged);
             this.languagesListbox.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.languagesListbox_MouseDoubleClick);
             // 
@@ -94,6 +94,7 @@ namespace UmbracoTranslationHelper
             this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Hide;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Languages";
+            this.Shown += new System.EventHandler(this.LanguageChoice_Shown);
             this.ResumeLayout(false);
 
         }

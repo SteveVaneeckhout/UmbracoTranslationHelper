@@ -13,11 +13,11 @@ namespace UmbracoTranslationHelper
         public string Culture => Translations.Culture;
         public string Language => Translations.IntName;
         public int TranslationCount => Translations.Areas.Sum(a => a.Keys.Count);
-        public Language Translations { get; set; }
+        public Dictionary Translations { get; set; }
 
         public static LanguageFile Deserialize(string filename)
         {
-            var result = new Language();
+            var result = new Dictionary();
 
             XmlDocument document = new();
             document.Load(filename);
@@ -96,7 +96,7 @@ namespace UmbracoTranslationHelper
             return new LanguageFile() { Translations = result };
         }
 
-        public static void Serialize(Language dictionary, string path)
+        public static void Serialize(Dictionary dictionary, string path)
         {
             var settings = new XmlWriterSettings()
             {

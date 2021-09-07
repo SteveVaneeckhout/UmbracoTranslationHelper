@@ -263,5 +263,13 @@ namespace UmbracoTranslationHelper
             }
             optionsForm.Dispose();
         }
+
+        private void sanitizeDictionaryFilesMenuItem_Click(object sender, EventArgs e)
+        {
+            var sanitizeForm = new SanitizeForm(Path.Combine(UmbracoSourcePath, SubDirectory));
+
+            sanitizeForm.ShowDialog();
+            sanitizeForm.Dispose();
+        }
     }
 }

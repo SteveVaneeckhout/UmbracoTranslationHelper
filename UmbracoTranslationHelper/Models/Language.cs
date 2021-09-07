@@ -2,7 +2,7 @@
 
 namespace UmbracoTranslationHelper.Models
 {
-    public class Language
+    public class Dictionary
     {
         public LanguageCreator Creator { get; set; } = new LanguageCreator();
         public List<LanguageArea> Areas { get; set; } = new List<LanguageArea>();

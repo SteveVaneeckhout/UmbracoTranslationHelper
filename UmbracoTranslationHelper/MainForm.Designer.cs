@@ -46,6 +46,8 @@ namespace UmbracoTranslationHelper
             this.originalHeader = new System.Windows.Forms.ColumnHeader();
             this.translationHeader = new System.Windows.Forms.ColumnHeader();
             this.onlyNontranslationsCheckbox = new System.Windows.Forms.CheckBox();
+            this.sanitizeDictionaryFilesMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             this.mainMenu.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -105,6 +107,8 @@ namespace UmbracoTranslationHelper
             // toolsMenuItem
             // 
             this.toolsMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.sanitizeDictionaryFilesMenuItem,
+            this.toolStripSeparator2,
             this.optionsMenuItem});
             this.toolsMenuItem.Name = "toolsMenuItem";
             this.toolsMenuItem.Size = new System.Drawing.Size(69, 29);
@@ -113,7 +117,7 @@ namespace UmbracoTranslationHelper
             // optionsMenuItem
             // 
             this.optionsMenuItem.Name = "optionsMenuItem";
-            this.optionsMenuItem.Size = new System.Drawing.Size(178, 34);
+            this.optionsMenuItem.Size = new System.Drawing.Size(305, 34);
             this.optionsMenuItem.Text = "Options";
             this.optionsMenuItem.Click += new System.EventHandler(this.optionsMenuItem_Click);
             // 
@@ -190,6 +194,18 @@ namespace UmbracoTranslationHelper
             this.onlyNontranslationsCheckbox.UseVisualStyleBackColor = true;
             this.onlyNontranslationsCheckbox.CheckedChanged += new System.EventHandler(this.onlyNontranslationsCheckbox_CheckedChanged);
             // 
+            // sanitizeDictionaryFilesMenuItem
+            // 
+            this.sanitizeDictionaryFilesMenuItem.Name = "sanitizeDictionaryFilesMenuItem";
+            this.sanitizeDictionaryFilesMenuItem.Size = new System.Drawing.Size(305, 34);
+            this.sanitizeDictionaryFilesMenuItem.Text = "Sanitize dictionary files...";
+            this.sanitizeDictionaryFilesMenuItem.Click += new System.EventHandler(this.sanitizeDictionaryFilesMenuItem_Click);
+            // 
+            // toolStripSeparator2
+            // 
+            this.toolStripSeparator2.Name = "toolStripSeparator2";
+            this.toolStripSeparator2.Size = new System.Drawing.Size(302, 6);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(144F, 144F);
@@ -228,6 +244,8 @@ namespace UmbracoTranslationHelper
         private System.Windows.Forms.CheckBox onlyNontranslationsCheckbox;
         private System.Windows.Forms.ToolStripMenuItem toolsMenuItem;
         private System.Windows.Forms.ToolStripMenuItem optionsMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem sanitizeDictionaryFilesMenuItem;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
     }
 }
 

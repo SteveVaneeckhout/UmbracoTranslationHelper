@@ -23,6 +23,8 @@ namespace UmbracoTranslationHelper
         public MainForm()
         {
             InitializeComponent();
+
+            UmbracoSourcePath = Settings.GetSetting("UmbracoSourcePath");
         }
 
         private void fileOpenMenuItem_Click(object sender, EventArgs e)
@@ -32,6 +34,7 @@ namespace UmbracoTranslationHelper
                 if (folderBrowserDialog.ShowDialog(this) == DialogResult.OK)
                 {
                     UmbracoSourcePath = folderBrowserDialog.SelectedPath;
+                    Settings.SaveSetting("UmbracoSourcePath", UmbracoSourcePath);
                 }
             }
 
@@ -256,6 +259,7 @@ namespace UmbracoTranslationHelper
             if (optionsForm.ShowDialog(this) == DialogResult.OK)
             {
                 UmbracoSourcePath = optionsForm.SourcePath;
+                Settings.SaveSetting("UmbracoSourcePath", UmbracoSourcePath);
             }
             optionsForm.Dispose();
         }

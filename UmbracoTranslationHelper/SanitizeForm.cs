@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Windows.Forms;
 
 #pragma warning disable IDE1006 // Naming Styles
@@ -27,17 +28,13 @@ namespace UmbracoTranslationHelper
             var files = Directory.GetFiles(_dictionariesDirectory, "*.xml");
             var exceptions = new Dictionary<string, string>();
 
-            foreach (var file in files)
-            {
-                if (file.EndsWith("en_us.xml"))
-                {
-                    // Do not touch the leading dictionary
-                    continue;
-                }
+            var leading = LanguageFile.Deserialize(files.Single(f => f.EndsWith("en_us.xml")));
 
+            foreach (var file in files.Where(f => !f.EndsWith("en_us.xml")))
+            {
                 try
                 {
-                    var dictionary = LanguageFile.Deserialize(file);
+                    var dictionary = LanguageFile.Deserialize(file, leading.Translations);
                     LanguageFile.Serialize(dictionary.Translations, _dictionariesDirectory);
                 }
                 catch (Exception ex)
@@ -59,7 +56,7 @@ namespace UmbracoTranslationHelper
             }
             else
             {
-                errorsLabel.Text = "All dictionaries sanitized";
+                errorsLabel.Text = "All dictionaries sanitized!";
                 errorsLabel.Visible = true;
             }
         }

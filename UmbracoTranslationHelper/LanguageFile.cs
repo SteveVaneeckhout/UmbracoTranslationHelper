@@ -15,7 +15,7 @@ namespace UmbracoTranslationHelper
         public int TranslationCount => Translations.Areas.Sum(a => a.Keys.Count);
         public Dictionary Translations { get; set; }
 
-        public static LanguageFile Deserialize(string filename)
+        public static LanguageFile Deserialize(string filename, Dictionary leading = null)
         {
             var result = new Dictionary();
 
@@ -57,6 +57,12 @@ namespace UmbracoTranslationHelper
                     Alias = areaNode.Attributes["alias"].Value
                 };
 
+                // Check for duplicate areas and if it exists in the leading file
+                if (result.Areas.Any(a => a.Alias == area.Alias) || (leading != null && !leading.Areas.Any(a => a.Alias == area.Alias)))
+                {
+                    continue;
+                }
+
                 foreach (XmlNode key in areaNode.ChildNodes)
                 {
                     if (key.NodeType == XmlNodeType.Text)
@@ -82,7 +88,14 @@ namespace UmbracoTranslationHelper
                             Value = key.InnerText
                         };
 
-                        area.Keys.Add(newKey);
+                        // Check for duplicate keys and if it exists in the leading file
+                        if (!area.Keys.Any(k => k.Alias == newKey.Alias)
+                            && (leading == null
+                                || leading.Areas.Single(a => a.Alias == area.Alias).Keys
+                                                .Any(k => k.Alias == newKey.Alias)))
+                        {
+                            area.Keys.Add(newKey);
+                        }
                     }
                     catch (Exception ex)
                     {

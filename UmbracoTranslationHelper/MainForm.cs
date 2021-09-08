@@ -47,11 +47,18 @@ namespace UmbracoTranslationHelper
                     var files = Directory.GetFiles(translationsDirectory, "*.xml");
                     var languageFiles = new List<LanguageFile>();
 
-                    foreach (var file in files)
+                    LanguageFile leading = null;
+                    if (files.Any(f => f.EndsWith("en_us.xml")))
+                    {
+                        leading = LanguageFile.Deserialize(files.Single(f => f.EndsWith("en_us.xml")));
+                        languageFiles.Add(leading);
+                    }
+
+                    foreach (var file in files.Where(f => !f.EndsWith("en_us.xml")))
                     {
                         try
                         {
-                            languageFiles.Add(LanguageFile.Deserialize(file));
+                            languageFiles.Add(LanguageFile.Deserialize(file, leading.Translations));
                         }
                         catch (Exception)
                         {

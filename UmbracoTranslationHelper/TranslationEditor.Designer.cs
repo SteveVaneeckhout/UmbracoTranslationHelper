@@ -133,6 +133,7 @@ namespace UmbracoTranslationHelper
             // 
             // translationLinkLabel
             // 
+            this.translationLinkLabel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.translationLinkLabel.AutoSize = true;
             this.translationLinkLabel.Location = new System.Drawing.Point(124, 596);
             this.translationLinkLabel.Name = "translationLinkLabel";

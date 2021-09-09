@@ -31,23 +31,26 @@ namespace UmbracoTranslationHelper
         {
             this.mainMenu = new System.Windows.Forms.MenuStrip();
             this.fileMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.fileNewMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.fileOpenMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.saveToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.fileSaveMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.fileCloseMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
-            this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.fileExitMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolsMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.sanitizeDictionaryFilesMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             this.optionsMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.helpMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.checkForUpdateToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.helpCheckForUpdateMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.helpAboutMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.folderBrowserDialog = new System.Windows.Forms.FolderBrowserDialog();
             this.wordsListView = new System.Windows.Forms.ListView();
             this.AliasHeader = new System.Windows.Forms.ColumnHeader();
             this.originalHeader = new System.Windows.Forms.ColumnHeader();
             this.translationHeader = new System.Windows.Forms.ColumnHeader();
             this.onlyNontranslationsCheckbox = new System.Windows.Forms.CheckBox();
-            this.sanitizeDictionaryFilesMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
+            this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
             this.mainMenu.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -67,13 +70,23 @@ namespace UmbracoTranslationHelper
             // fileMenuItem
             // 
             this.fileMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.fileNewMenuItem,
             this.fileOpenMenuItem,
-            this.saveToolStripMenuItem,
+            this.fileSaveMenuItem,
+            this.fileCloseMenuItem,
             this.toolStripSeparator1,
-            this.exitToolStripMenuItem});
+            this.fileExitMenuItem});
             this.fileMenuItem.Name = "fileMenuItem";
             this.fileMenuItem.Size = new System.Drawing.Size(54, 29);
             this.fileMenuItem.Text = "File";
+            // 
+            // fileNewMenuItem
+            // 
+            this.fileNewMenuItem.Name = "fileNewMenuItem";
+            this.fileNewMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.N)));
+            this.fileNewMenuItem.Size = new System.Drawing.Size(235, 34);
+            this.fileNewMenuItem.Text = "New...";
+            this.fileNewMenuItem.Click += new System.EventHandler(this.fileNewMenuItem_Click);
             // 
             // fileOpenMenuItem
             // 
@@ -83,26 +96,34 @@ namespace UmbracoTranslationHelper
             this.fileOpenMenuItem.Text = "Open...";
             this.fileOpenMenuItem.Click += new System.EventHandler(this.fileOpenMenuItem_Click);
             // 
-            // saveToolStripMenuItem
+            // fileSaveMenuItem
             // 
-            this.saveToolStripMenuItem.Name = "saveToolStripMenuItem";
-            this.saveToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.S)));
-            this.saveToolStripMenuItem.Size = new System.Drawing.Size(235, 34);
-            this.saveToolStripMenuItem.Text = "Save";
-            this.saveToolStripMenuItem.Click += new System.EventHandler(this.saveToolStripMenuItem_Click);
+            this.fileSaveMenuItem.Name = "fileSaveMenuItem";
+            this.fileSaveMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.S)));
+            this.fileSaveMenuItem.Size = new System.Drawing.Size(235, 34);
+            this.fileSaveMenuItem.Text = "Save";
+            this.fileSaveMenuItem.Click += new System.EventHandler(this.fileSaveMenuItem_Click);
+            // 
+            // fileCloseMenuItem
+            // 
+            this.fileCloseMenuItem.Name = "fileCloseMenuItem";
+            this.fileCloseMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.C)));
+            this.fileCloseMenuItem.Size = new System.Drawing.Size(235, 34);
+            this.fileCloseMenuItem.Text = "Close";
+            this.fileCloseMenuItem.Click += new System.EventHandler(this.fileCloseMenuItem_Click);
             // 
             // toolStripSeparator1
             // 
             this.toolStripSeparator1.Name = "toolStripSeparator1";
             this.toolStripSeparator1.Size = new System.Drawing.Size(232, 6);
             // 
-            // exitToolStripMenuItem
+            // fileExitMenuItem
             // 
-            this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
-            this.exitToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Alt | System.Windows.Forms.Keys.F4)));
-            this.exitToolStripMenuItem.Size = new System.Drawing.Size(235, 34);
-            this.exitToolStripMenuItem.Text = "Exit";
-            this.exitToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
+            this.fileExitMenuItem.Name = "fileExitMenuItem";
+            this.fileExitMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Alt | System.Windows.Forms.Keys.F4)));
+            this.fileExitMenuItem.Size = new System.Drawing.Size(235, 34);
+            this.fileExitMenuItem.Text = "Exit";
+            this.fileExitMenuItem.Click += new System.EventHandler(this.fileExitMenuItem_Click);
             // 
             // toolsMenuItem
             // 
@@ -114,6 +135,18 @@ namespace UmbracoTranslationHelper
             this.toolsMenuItem.Size = new System.Drawing.Size(69, 29);
             this.toolsMenuItem.Text = "Tools";
             // 
+            // sanitizeDictionaryFilesMenuItem
+            // 
+            this.sanitizeDictionaryFilesMenuItem.Name = "sanitizeDictionaryFilesMenuItem";
+            this.sanitizeDictionaryFilesMenuItem.Size = new System.Drawing.Size(305, 34);
+            this.sanitizeDictionaryFilesMenuItem.Text = "Sanitize dictionary files...";
+            this.sanitizeDictionaryFilesMenuItem.Click += new System.EventHandler(this.sanitizeDictionaryFilesMenuItem_Click);
+            // 
+            // toolStripSeparator2
+            // 
+            this.toolStripSeparator2.Name = "toolStripSeparator2";
+            this.toolStripSeparator2.Size = new System.Drawing.Size(302, 6);
+            // 
             // optionsMenuItem
             // 
             this.optionsMenuItem.Name = "optionsMenuItem";
@@ -124,23 +157,25 @@ namespace UmbracoTranslationHelper
             // helpMenuItem
             // 
             this.helpMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.checkForUpdateToolStripMenuItem,
-            this.aboutToolStripMenuItem});
+            this.helpCheckForUpdateMenuItem,
+            this.toolStripSeparator3,
+            this.helpAboutMenuItem});
             this.helpMenuItem.Name = "helpMenuItem";
             this.helpMenuItem.Size = new System.Drawing.Size(65, 29);
             this.helpMenuItem.Text = "Help";
             // 
-            // checkForUpdateToolStripMenuItem
+            // helpCheckForUpdateMenuItem
             // 
-            this.checkForUpdateToolStripMenuItem.Name = "checkForUpdateToolStripMenuItem";
-            this.checkForUpdateToolStripMenuItem.Size = new System.Drawing.Size(250, 34);
-            this.checkForUpdateToolStripMenuItem.Text = "Check for update";
+            this.helpCheckForUpdateMenuItem.Name = "helpCheckForUpdateMenuItem";
+            this.helpCheckForUpdateMenuItem.Size = new System.Drawing.Size(270, 34);
+            this.helpCheckForUpdateMenuItem.Text = "Check for update";
             // 
-            // aboutToolStripMenuItem
+            // helpAboutMenuItem
             // 
-            this.aboutToolStripMenuItem.Name = "aboutToolStripMenuItem";
-            this.aboutToolStripMenuItem.Size = new System.Drawing.Size(250, 34);
-            this.aboutToolStripMenuItem.Text = "About";
+            this.helpAboutMenuItem.Name = "helpAboutMenuItem";
+            this.helpAboutMenuItem.Size = new System.Drawing.Size(270, 34);
+            this.helpAboutMenuItem.Text = "About";
+            this.helpAboutMenuItem.Click += new System.EventHandler(this.helpAboutMenuItem_Click);
             // 
             // folderBrowserDialog
             // 
@@ -194,17 +229,10 @@ namespace UmbracoTranslationHelper
             this.onlyNontranslationsCheckbox.UseVisualStyleBackColor = true;
             this.onlyNontranslationsCheckbox.CheckedChanged += new System.EventHandler(this.onlyNontranslationsCheckbox_CheckedChanged);
             // 
-            // sanitizeDictionaryFilesMenuItem
+            // toolStripSeparator3
             // 
-            this.sanitizeDictionaryFilesMenuItem.Name = "sanitizeDictionaryFilesMenuItem";
-            this.sanitizeDictionaryFilesMenuItem.Size = new System.Drawing.Size(305, 34);
-            this.sanitizeDictionaryFilesMenuItem.Text = "Sanitize dictionary files...";
-            this.sanitizeDictionaryFilesMenuItem.Click += new System.EventHandler(this.sanitizeDictionaryFilesMenuItem_Click);
-            // 
-            // toolStripSeparator2
-            // 
-            this.toolStripSeparator2.Name = "toolStripSeparator2";
-            this.toolStripSeparator2.Size = new System.Drawing.Size(302, 6);
+            this.toolStripSeparator3.Name = "toolStripSeparator3";
+            this.toolStripSeparator3.Size = new System.Drawing.Size(267, 6);
             // 
             // MainForm
             // 
@@ -217,7 +245,7 @@ namespace UmbracoTranslationHelper
             this.DoubleBuffered = true;
             this.MainMenuStrip = this.mainMenu;
             this.Name = "MainForm";
-            this.Text = "Umbraco Translation Helper";
+            this.Text = "Umbraco Backoffice Translation Helper";
             this.mainMenu.ResumeLayout(false);
             this.mainMenu.PerformLayout();
             this.ResumeLayout(false);
@@ -230,12 +258,12 @@ namespace UmbracoTranslationHelper
         private System.Windows.Forms.MenuStrip mainMenu;
         private System.Windows.Forms.ToolStripMenuItem fileMenuItem;
         private System.Windows.Forms.ToolStripMenuItem fileOpenMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem saveToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem fileSaveMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
-        private System.Windows.Forms.ToolStripMenuItem exitToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem fileExitMenuItem;
         private System.Windows.Forms.ToolStripMenuItem helpMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem checkForUpdateToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem aboutToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem helpCheckForUpdateMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem helpAboutMenuItem;
         private System.Windows.Forms.FolderBrowserDialog folderBrowserDialog;
         private System.Windows.Forms.ListView wordsListView;
         private System.Windows.Forms.ColumnHeader AliasHeader;
@@ -246,6 +274,9 @@ namespace UmbracoTranslationHelper
         private System.Windows.Forms.ToolStripMenuItem optionsMenuItem;
         private System.Windows.Forms.ToolStripMenuItem sanitizeDictionaryFilesMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
+        private System.Windows.Forms.ToolStripMenuItem fileNewMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem fileCloseMenuItem;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator3;
     }
 }
 

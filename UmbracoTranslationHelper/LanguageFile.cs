@@ -13,11 +13,12 @@ namespace UmbracoTranslationHelper
         public string Culture => Translations.Culture;
         public string Language => Translations.IntName;
         public int TranslationCount => Translations.Areas.Sum(a => a.Keys.Count);
-        public Dictionary Translations { get; set; }
+        public string FileName { get; set; }
+        public Language Translations { get; set; }
 
-        public static LanguageFile Deserialize(string filename, Dictionary leading = null)
+        public static LanguageFile Deserialize(string filename, Language leading = null)
         {
-            var result = new Dictionary();
+            var result = new Language();
 
             XmlDocument document = new();
             document.Load(filename);
@@ -106,38 +107,40 @@ namespace UmbracoTranslationHelper
                 result.Areas.Add(area);
             }
 
-            return new LanguageFile() { Translations = result };
+            return new LanguageFile() { FileName = Path.GetFileName(filename), Translations = result };
         }
 
-        public static void Serialize(Dictionary dictionary, string path)
+        public static void Serialize(LanguageFile languageFile, string path)
         {
+            var translations = languageFile.Translations;
+
             var settings = new XmlWriterSettings()
             {
                 Indent = true,
                 Encoding = new UTF8Encoding(false) // no BOM
             };
 
-            using Stream fs = new FileStream(Path.Combine(path, dictionary.Alias + ".xml"), FileMode.Create);
+            using Stream fs = new FileStream(Path.Combine(path, languageFile.FileName), FileMode.Create);
             using XmlWriter writer = XmlTextWriter.Create(fs, settings);
 
             // Manually generate document because key values only use a <![CDATA[ ]]> when the value contains HTML.
             writer.WriteStartDocument(true);
 
             writer.WriteStartElement("language");
-            writer.WriteAttributeString("alias", dictionary.Alias);
-            writer.WriteAttributeString("intName", dictionary.IntName);
-            writer.WriteAttributeString("localName", dictionary.LocalName);
-            writer.WriteAttributeString("lcid", dictionary.Lcid);
-            writer.WriteAttributeString("culture", dictionary.Culture);
+            writer.WriteAttributeString("alias", translations.Alias);
+            writer.WriteAttributeString("intName", translations.IntName);
+            writer.WriteAttributeString("localName", translations.LocalName);
+            writer.WriteAttributeString("lcid", translations.Lcid);
+            writer.WriteAttributeString("culture", translations.Culture);
 
             // Creator
             writer.WriteStartElement("creator");
-            writer.WriteElementString("name", dictionary.Creator.Name);
-            writer.WriteElementString("link", dictionary.Creator.Link);
+            writer.WriteElementString("name", translations.Creator.Name);
+            writer.WriteElementString("link", translations.Creator.Link);
             writer.WriteEndElement();
 
             // Areas
-            foreach (var area in dictionary.Areas)
+            foreach (var area in translations.Areas)
             {
                 writer.WriteStartElement("area");
                 writer.WriteAttributeString("alias", area.Alias);

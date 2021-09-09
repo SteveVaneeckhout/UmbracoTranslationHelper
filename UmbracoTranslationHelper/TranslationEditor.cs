@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Diagnostics;
 using System.Web;
 using System.Windows.Forms;
 
@@ -55,6 +54,8 @@ namespace UmbracoTranslationHelper
         public TranslationEditorForm()
         {
             InitializeComponent();
+
+            okButton.Enabled = false;
         }
 
         private void TranslationEditorForm_Shown(object sender, EventArgs e)
@@ -69,10 +70,12 @@ namespace UmbracoTranslationHelper
 
         private void translationLinkLabel_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            using var browser = new Process();
-            browser.StartInfo.FileName = $"https://translate.google.com/?sl=en&tl={TranslationCulture}&text={HttpUtility.UrlEncode(this.Original)}&op=translate";
-            browser.StartInfo.UseShellExecute = true;
-            browser.Start();
+            Extensions.LinkLauncher.Launch($"https://translate.google.com/?sl=en&tl={TranslationCulture}&text={HttpUtility.UrlEncode(this.Original)}&op=translate");
+        }
+
+        private void translationTextbox_TextChanged(object sender, EventArgs e)
+        {
+            okButton.Enabled = !string.IsNullOrEmpty(translationTextbox.Text);
         }
     }
 }

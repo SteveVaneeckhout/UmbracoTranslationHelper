@@ -19,76 +19,16 @@ namespace UmbracoTranslationHelper
         public LanguageFile Translations { get; set; }
 
         public string UmbracoSourcePath { get; set; }
+        public string UmbracoDictionariesPath => Path.Combine(UmbracoSourcePath, SubDirectory);
 
         public MainForm()
         {
             InitializeComponent();
 
             UmbracoSourcePath = Settings.GetSetting("UmbracoSourcePath");
-        }
 
-        private void fileOpenMenuItem_Click(object sender, EventArgs e)
-        {
-            if (UmbracoSourcePath == null)
-            {
-                if (folderBrowserDialog.ShowDialog(this) == DialogResult.OK)
-                {
-                    UmbracoSourcePath = folderBrowserDialog.SelectedPath;
-                    Settings.SaveSetting("UmbracoSourcePath", UmbracoSourcePath);
-                }
-            }
-
-            if (UmbracoSourcePath != null)
-            {
-                var translationsDirectory = Path.Combine(UmbracoSourcePath, SubDirectory);
-
-                if (Directory.Exists(translationsDirectory))
-                {
-                    var files = Directory.GetFiles(translationsDirectory, "*.xml");
-                    var languageFiles = new List<LanguageFile>();
-
-                    LanguageFile leading = null;
-                    if (files.Any(f => f.EndsWith("en_us.xml")))
-                    {
-                        leading = LanguageFile.Deserialize(files.Single(f => f.EndsWith("en_us.xml")));
-                        languageFiles.Add(leading);
-                    }
-
-                    foreach (var file in files.Where(f => !f.EndsWith("en_us.xml")))
-                    {
-                        try
-                        {
-                            languageFiles.Add(LanguageFile.Deserialize(file, leading.Translations));
-                        }
-                        catch (Exception)
-                        {
-                            MessageBox.Show($"File is corrupt: {file}");
-                        }
-                    }
-
-                    var baseLanguage = languageFiles.SingleOrDefault(l => l.Translations.Culture == "en-US");
-                    var languageChoiceForm = new LanguageChoice(languageFiles.Where(l => l.Culture != "en-US")
-                                                                                .Select(l => new LanguageDisplay() { Culture = l.Culture, Title = GenerateTitle(l, baseLanguage.TranslationCount) })
-                                                                                .OrderBy(ld => ld.Title)
-                                                                                .ToArray());
-
-                    if (languageChoiceForm.ShowDialog(this) == DialogResult.OK)
-                    {
-                        ClearCurrentDocument();
-
-                        Original = baseLanguage;
-                        Translations = languageFiles.FirstOrDefault(l => l.Culture == languageChoiceForm.SelectedLanguage);
-
-                        RefreshListView();
-                    }
-
-                    languageChoiceForm.Dispose();
-                }
-                else
-                {
-                    MessageBox.Show(this, "Directory with language files not found at: " + translationsDirectory, "Directory not found", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                }
-            }
+            fileSaveMenuItem.Enabled = false;
+            fileCloseMenuItem.Enabled = false;
         }
 
         private void onlyNontranslationsCheckbox_CheckedChanged(object sender, EventArgs e)
@@ -98,6 +38,11 @@ namespace UmbracoTranslationHelper
 
         private void RefreshListView()
         {
+            if (Original == null || Translations == null)
+            {
+                return;
+            }
+
             var groups = new List<ListViewGroup>();
             var items = new List<ListViewItem>();
 
@@ -158,21 +103,20 @@ namespace UmbracoTranslationHelper
             wordsListView.EndUpdate();
         }
 
-        private void RefreshListViewSelectedItem()
+        private void RefreshListViewSelectedItem(LanguageAreaKey key)
         {
             var item = wordsListView.SelectedItems[0];
 
-            var tagParts = item.Tag.ToString().Split("|");
-
-            item.SubItems[2].Text = Translations.Translations.Areas.First(a => a.Alias == tagParts[0]).Keys.First(k => k.Alias == tagParts[1]).Value;
+            item.SubItems[2].Text = key.Value;
         }
 
-        private void ClearCurrentDocument()
+        private void CloseDocument()
         {
             wordsListView.Groups.Clear();
             wordsListView.Items.Clear();
             Original = null;
             Translations = null;
+            onlyNontranslationsCheckbox.Checked = false;
         }
 
         private static string GenerateTitle(LanguageFile l, int translationCount)
@@ -180,11 +124,6 @@ namespace UmbracoTranslationHelper
             var percent = ((decimal)l.TranslationCount / translationCount) * 100;
 
             return $"{l.Translations.LocalName} ({l.Culture}) - {percent:0}% complete";
-        }
-
-        private void exitToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            this.Close();
         }
 
         private void wordsListView_MouseDoubleClick(object sender, MouseEventArgs e)
@@ -206,14 +145,14 @@ namespace UmbracoTranslationHelper
             {
                 // area.alias + "|" + word.alias;
                 string[] tagParts = wordsListView.SelectedItems[0].Tag.ToString().Split('|');
-                var original = Original.Translations.Areas.First(a => a.Alias == tagParts[0]).Keys.First(k => k.Alias == tagParts[1]).Value;
+                var originalKey = Original.Translations.Areas.First(a => a.Alias == tagParts[0]).Keys.First(k => k.Alias == tagParts[1]);
                 var translation = Translations.Translations.Areas.FirstOrDefault(a => a.Alias == tagParts[0])?.Keys.FirstOrDefault(k => k.Alias == tagParts[1])?.Value;
 
                 var form = new TranslationEditorForm()
                 {
                     AreaAlias = tagParts[0],
                     Alias = tagParts[1],
-                    Original = original,
+                    Original = originalKey.Value,
                     Translation = translation,
                     TranslationCulture = Translations.Translations.Alias
                 };
@@ -230,30 +169,160 @@ namespace UmbracoTranslationHelper
                             Alias = form.AreaAlias,
                             Keys = new List<LanguageAreaKey>()
                         };
+
+                        Translations.Translations.Areas.Add(area);
                     }
 
                     var key = area.Keys.FirstOrDefault(k => k.Alias == form.Alias);
+
                     if (key == null)
                     {
                         // create key
                         key = new LanguageAreaKey()
                         {
-                            Alias = form.Alias
+                            Alias = form.Alias,
+                            Version = originalKey.Version
                         };
+
                         area.Keys.Add(key);
                     }
 
                     key.Value = form.Translation;
 
-                    RefreshListViewSelectedItem();
+                    RefreshListViewSelectedItem(key);
                 }
                 form.Dispose();
             }
         }
 
-        private void saveToolStripMenuItem_Click(object sender, EventArgs e)
+        /* File menu */
+        private void fileNewMenuItem_Click(object sender, EventArgs e)
         {
-            LanguageFile.Serialize(Translations.Translations, Path.Combine(UmbracoSourcePath, SubDirectory));
+            var newFileForm = new NewFileForm();
+
+            if (newFileForm.ShowDialog() == DialogResult.OK)
+            {
+                if (UmbracoSourcePath == null)
+                {
+                    if (folderBrowserDialog.ShowDialog(this) == DialogResult.OK)
+                    {
+                        UmbracoSourcePath = folderBrowserDialog.SelectedPath;
+                        Settings.SaveSetting("UmbracoSourcePath", UmbracoSourcePath);
+                    }
+                }
+
+                if (UmbracoSourcePath != null)
+                {
+                    if (Directory.Exists(UmbracoDictionariesPath))
+                    {
+                        var files = Directory.GetFiles(UmbracoDictionariesPath, "*.xml");
+                        var languageFiles = new List<LanguageFile>();
+
+                        if (files.Any(f => Path.GetFileName(f) == "en_us.xml"))
+                        {
+                            this.Translations = newFileForm.LanguageFile;
+                            this.Original = LanguageFile.Deserialize(files.Single(f => Path.GetFileName(f) == "en_us.xml"));
+                        }
+
+                        fileSaveMenuItem.Enabled = true;
+                        fileCloseMenuItem.Enabled = true;
+                    }
+                    else
+                    {
+                        MessageBox.Show(this, "Directory with language files not found at: " + UmbracoDictionariesPath, "Directory not found", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
+                }
+            }
+            newFileForm.Dispose();
+        }
+
+        private void fileOpenMenuItem_Click(object sender, EventArgs e)
+        {
+            if (UmbracoSourcePath == null)
+            {
+                if (folderBrowserDialog.ShowDialog(this) == DialogResult.OK)
+                {
+                    UmbracoSourcePath = folderBrowserDialog.SelectedPath;
+                    Settings.SaveSetting("UmbracoSourcePath", UmbracoSourcePath);
+                }
+            }
+
+            if (UmbracoSourcePath != null)
+            {
+                if (Directory.Exists(UmbracoDictionariesPath))
+                {
+                    var files = Directory.GetFiles(UmbracoDictionariesPath, "*.xml");
+                    var languageFiles = new List<LanguageFile>();
+
+                    LanguageFile leading = null;
+                    if (files.Any(f => Path.GetFileName(f) == "en_us.xml"))
+                    {
+                        leading = LanguageFile.Deserialize(files.Single(f => Path.GetFileName(f) == "en_us.xml"));
+                        languageFiles.Add(leading);
+                    }
+
+                    foreach (var file in files.Where(f => !f.EndsWith("en_us.xml")))
+                    {
+                        try
+                        {
+                            languageFiles.Add(LanguageFile.Deserialize(file, leading.Translations));
+                        }
+                        catch (Exception)
+                        {
+                            MessageBox.Show($"File is corrupt: {file}");
+                        }
+                    }
+
+                    var baseLanguage = languageFiles.SingleOrDefault(l => l.Translations.Culture == "en-US");
+                    var languageChoiceForm = new LanguageChoice(languageFiles.Where(l => l.Culture != "en-US")
+                                                                                .Select(l => new LanguageDisplay() { Culture = l.Culture, Title = GenerateTitle(l, baseLanguage.TranslationCount) })
+                                                                                .OrderBy(ld => ld.Title)
+                                                                                .ToArray());
+
+                    if (languageChoiceForm.ShowDialog(this) == DialogResult.OK)
+                    {
+                        CloseDocument();
+
+                        Original = baseLanguage;
+                        Translations = languageFiles.FirstOrDefault(l => l.Culture == languageChoiceForm.SelectedLanguage);
+
+                        RefreshListView();
+
+                        fileSaveMenuItem.Enabled = true;
+                        fileCloseMenuItem.Enabled = true;
+                    }
+
+                    languageChoiceForm.Dispose();
+                }
+                else
+                {
+                    MessageBox.Show(this, "Directory with language files not found at: " + UmbracoDictionariesPath, "Directory not found", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
+        }
+
+        private void fileSaveMenuItem_Click(object sender, EventArgs e)
+        {
+            LanguageFile.Serialize(Translations, Path.Combine(UmbracoSourcePath, SubDirectory));
+        }
+
+        private void fileCloseMenuItem_Click(object sender, EventArgs e)
+        {
+            CloseDocument();
+        }
+
+        private void fileExitMenuItem_Click(object sender, EventArgs e)
+        {
+            this.Close();
+        }
+
+        /* Tools menu */
+        private void sanitizeDictionaryFilesMenuItem_Click(object sender, EventArgs e)
+        {
+            var sanitizeForm = new SanitizeForm(Path.Combine(UmbracoSourcePath, SubDirectory));
+
+            sanitizeForm.ShowDialog();
+            sanitizeForm.Dispose();
         }
 
         private void optionsMenuItem_Click(object sender, EventArgs e)
@@ -271,12 +340,13 @@ namespace UmbracoTranslationHelper
             optionsForm.Dispose();
         }
 
-        private void sanitizeDictionaryFilesMenuItem_Click(object sender, EventArgs e)
+        /* Help menu */
+        private void helpAboutMenuItem_Click(object sender, EventArgs e)
         {
-            var sanitizeForm = new SanitizeForm(Path.Combine(UmbracoSourcePath, SubDirectory));
+            var aboutForm = new AboutForm();
 
-            sanitizeForm.ShowDialog();
-            sanitizeForm.Dispose();
+            aboutForm.ShowDialog();
+            aboutForm.Dispose();
         }
     }
 }

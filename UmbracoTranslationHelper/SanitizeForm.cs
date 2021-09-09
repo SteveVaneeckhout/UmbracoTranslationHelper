@@ -35,7 +35,7 @@ namespace UmbracoTranslationHelper
                 try
                 {
                     var dictionary = LanguageFile.Deserialize(file, leading.Translations);
-                    LanguageFile.Serialize(dictionary.Translations, _dictionariesDirectory);
+                    LanguageFile.Serialize(dictionary, _dictionariesDirectory);
                 }
                 catch (Exception ex)
                 {

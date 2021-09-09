@@ -47,10 +47,10 @@ namespace UmbracoTranslationHelper
             // 
             this.okButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.okButton.DialogResult = System.Windows.Forms.DialogResult.OK;
-            this.okButton.Location = new System.Drawing.Point(925, 591);
+            this.okButton.Location = new System.Drawing.Point(796, 591);
             this.okButton.Name = "okButton";
             this.okButton.Size = new System.Drawing.Size(112, 34);
-            this.okButton.TabIndex = 7;
+            this.okButton.TabIndex = 6;
             this.okButton.Text = "OK";
             this.okButton.UseVisualStyleBackColor = true;
             this.okButton.Click += new System.EventHandler(this.Button_Click);
@@ -59,10 +59,10 @@ namespace UmbracoTranslationHelper
             // 
             this.cancelButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.cancelButton.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.cancelButton.Location = new System.Drawing.Point(807, 591);
+            this.cancelButton.Location = new System.Drawing.Point(914, 591);
             this.cancelButton.Name = "cancelButton";
             this.cancelButton.Size = new System.Drawing.Size(112, 34);
-            this.cancelButton.TabIndex = 6;
+            this.cancelButton.TabIndex = 8;
             this.cancelButton.Text = "Cancel";
             this.cancelButton.UseVisualStyleBackColor = true;
             // 
@@ -130,6 +130,7 @@ namespace UmbracoTranslationHelper
             this.translationTextbox.Name = "translationTextbox";
             this.translationTextbox.Size = new System.Drawing.Size(902, 262);
             this.translationTextbox.TabIndex = 4;
+            this.translationTextbox.TextChanged += new System.EventHandler(this.translationTextbox_TextChanged);
             // 
             // translationLinkLabel
             // 

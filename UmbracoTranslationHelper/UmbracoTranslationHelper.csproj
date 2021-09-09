@@ -8,6 +8,7 @@
     <Description>A tool to help translate Umbraco.</Description>
     <PackageTags>Umbraco</PackageTags>
     <StartupObject>UmbracoTranslationHelper.Program</StartupObject>
+    <RepositoryType>https://github.com/SteveVaneeckhout/UmbracoTranslationHelper</RepositoryType>
   </PropertyGroup>
 
   <ItemGroup>

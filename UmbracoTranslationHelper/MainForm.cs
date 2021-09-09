@@ -14,6 +14,7 @@ namespace UmbracoTranslationHelper
     public partial class MainForm : Form
     {
         private const string SubDirectory = @"src\Umbraco.Web.UI\umbraco\config\lang";
+        private const string TitleBar = "Umbraco Backoffice Translation Helper";
 
         public LanguageFile Original { get; set; }
         public LanguageFile Translations { get; set; }
@@ -117,6 +118,10 @@ namespace UmbracoTranslationHelper
             Original = null;
             Translations = null;
             onlyNontranslationsCheckbox.Checked = false;
+            fileSaveMenuItem.Enabled = false;
+            fileCloseMenuItem.Enabled = false;
+
+            Text = TitleBar;
         }
 
         private static string GenerateTitle(LanguageFile l, int translationCount)
@@ -226,6 +231,9 @@ namespace UmbracoTranslationHelper
 
                         fileSaveMenuItem.Enabled = true;
                         fileCloseMenuItem.Enabled = true;
+
+                        Text = TitleBar + " - " + this.Translations.Translations.LocalName;
+                        RefreshListView();
                     }
                     else
                     {
@@ -286,10 +294,12 @@ namespace UmbracoTranslationHelper
                         Original = baseLanguage;
                         Translations = languageFiles.FirstOrDefault(l => l.Culture == languageChoiceForm.SelectedLanguage);
 
-                        RefreshListView();
+                        Text = TitleBar + " - " + this.Translations.Translations.LocalName;
 
                         fileSaveMenuItem.Enabled = true;
                         fileCloseMenuItem.Enabled = true;
+
+                        RefreshListView();
                     }
 
                     languageChoiceForm.Dispose();

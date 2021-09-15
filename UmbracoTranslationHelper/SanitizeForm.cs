@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
+using UmbracoTranslationHelper.Extensions;
 
 #pragma warning disable IDE1006 // Naming Styles
 
@@ -10,12 +11,10 @@ namespace UmbracoTranslationHelper
 {
     public partial class SanitizeForm : Form
     {
-        private readonly string _dictionariesDirectory;
 
-        public SanitizeForm(string dictionariesDirectory)
+        public SanitizeForm()
         {
             InitializeComponent();
-            _dictionariesDirectory = dictionariesDirectory;
         }
 
         private void closeButton_Click(object sender, EventArgs e)
@@ -25,17 +24,20 @@ namespace UmbracoTranslationHelper
 
         private void sanitizeButton_Click(object sender, EventArgs e)
         {
-            var files = Directory.GetFiles(_dictionariesDirectory, "*.xml");
+            var leadingLanguageFileName = Settings.GetSetting("LeadingLanguage");
+            var dictionariesDirectory = Settings.GetSetting("UmbracoSourcePath");
+            var files = Directory.GetFiles(dictionariesDirectory, "*.xml");
             var exceptions = new Dictionary<string, string>();
 
-            var leading = LanguageFile.Deserialize(files.Single(f => f.EndsWith("en_us.xml")));
+            var leading = LanguageFile.Deserialize(files.First(f => Path.GetFileName(f) == leadingLanguageFileName));
 
-            foreach (var file in files.Where(f => !f.EndsWith("en_us.xml")))
+            LanguageFile.Serialize(leading, dictionariesDirectory);
+            foreach (var file in files.Where(f => Path.GetFileName(f) != leadingLanguageFileName))
             {
                 try
                 {
                     var dictionary = LanguageFile.Deserialize(file, leading.Translations);
-                    LanguageFile.Serialize(dictionary, _dictionariesDirectory);
+                    LanguageFile.Serialize(dictionary, dictionariesDirectory);
                 }
                 catch (Exception ex)
                 {

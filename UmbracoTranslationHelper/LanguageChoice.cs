@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Windows.Forms;
+using UmbracoTranslationHelper.Models;
 
 #pragma warning disable IDE1006 // Naming Styles
 
@@ -7,7 +8,7 @@ namespace UmbracoTranslationHelper
 {
     public partial class LanguageChoice : Form
     {
-        public LanguageChoice(LanguageDisplay[] languages)
+        public LanguageChoice(ComboBoxItem[] languages)
         {
             InitializeComponent();
 
@@ -15,7 +16,7 @@ namespace UmbracoTranslationHelper
             okButton.Enabled = false;
         }
 
-        public string SelectedLanguage => ((LanguageDisplay)languagesListbox.SelectedItem).Culture;
+        public string SelectedLanguage => ((ComboBoxItem)languagesListbox.SelectedItem).Value;
 
         private void Button_Click(object sender, EventArgs e)
         {

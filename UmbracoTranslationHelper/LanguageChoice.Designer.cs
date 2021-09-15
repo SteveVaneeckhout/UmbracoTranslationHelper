@@ -65,6 +65,7 @@ namespace UmbracoTranslationHelper
             this.languagesListbox.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.languagesListbox.DisplayMember = "Text";
             this.languagesListbox.FormattingEnabled = true;
             this.languagesListbox.IntegralHeight = false;
             this.languagesListbox.ItemHeight = 25;
@@ -72,6 +73,7 @@ namespace UmbracoTranslationHelper
             this.languagesListbox.Name = "languagesListbox";
             this.languagesListbox.Size = new System.Drawing.Size(436, 592);
             this.languagesListbox.TabIndex = 1;
+            this.languagesListbox.ValueMember = "Value";
             this.languagesListbox.SelectedIndexChanged += new System.EventHandler(this.languagesListbox_SelectedIndexChanged);
             this.languagesListbox.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.languagesListbox_MouseDoubleClick);
             // 

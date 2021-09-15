@@ -1,20 +1,47 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
 using System.Xml;
-using System.Xml.Serialization;
+using UmbracoTranslationHelper.Extensions;
 using UmbracoTranslationHelper.Models;
 
 namespace UmbracoTranslationHelper
 {
     public class LanguageFile
     {
-        public string Culture => Translations.Culture;
-        public string Language => Translations.IntName;
+        public string Culture
+        {
+            get
+            {
+                if (string.IsNullOrEmpty(Translations.Culture))
+                {
+                    return Path.GetFileNameWithoutExtension(FileName);
+                }
+
+                return Translations.Culture;
+            }
+        }
+
+        public string Language
+        {
+            get
+            {
+                if (string.IsNullOrEmpty(Translations.LocalName))
+                {
+                    return CultureInfo.CreateSpecificCulture(Culture).NativeName;
+                }
+
+                return Translations.LocalName;
+            }
+        }
+
         public int TranslationCount => Translations.Areas.Sum(a => a.Keys.Count);
         public string FileName { get; set; }
         public Language Translations { get; set; }
+        public bool IsDirty { get; set; }
 
         public static LanguageFile Deserialize(string filename, Language leading = null)
         {
@@ -107,7 +134,7 @@ namespace UmbracoTranslationHelper
                 result.Areas.Add(area);
             }
 
-            return new LanguageFile() { FileName = Path.GetFileName(filename), Translations = result };
+            return new LanguageFile() { FileName = Path.GetFileName(filename), Translations = result, IsDirty = false };
         }
 
         public static void Serialize(LanguageFile languageFile, string path)
@@ -127,17 +154,45 @@ namespace UmbracoTranslationHelper
             writer.WriteStartDocument(true);
 
             writer.WriteStartElement("language");
-            writer.WriteAttributeString("alias", translations.Alias);
-            writer.WriteAttributeString("intName", translations.IntName);
-            writer.WriteAttributeString("localName", translations.LocalName);
-            writer.WriteAttributeString("lcid", translations.Lcid);
-            writer.WriteAttributeString("culture", translations.Culture);
+
+            if (!string.IsNullOrEmpty(translations.Alias))
+            {
+                writer.WriteAttributeString("alias", translations.Alias);
+            }
+            if (!string.IsNullOrEmpty(translations.IntName))
+            {
+                writer.WriteAttributeString("intName", translations.IntName);
+            }
+            if (!string.IsNullOrEmpty(translations.LocalName))
+            {
+                writer.WriteAttributeString("localName", translations.LocalName);
+            }
+            if (!string.IsNullOrEmpty(translations.Lcid))
+            {
+                writer.WriteAttributeString("lcid", translations.Lcid);
+            }
+            if (!string.IsNullOrEmpty(translations.Culture))
+            {
+                writer.WriteAttributeString("culture", translations.Culture);
+            }
 
             // Creator
-            writer.WriteStartElement("creator");
-            writer.WriteElementString("name", translations.Creator.Name);
-            writer.WriteElementString("link", translations.Creator.Link);
-            writer.WriteEndElement();
+            if (!string.IsNullOrEmpty(translations.Creator.Name) && !string.IsNullOrEmpty(translations.Creator.Link))
+            {
+                writer.WriteStartElement("creator");
+
+                if (!string.IsNullOrEmpty(translations.Creator.Name))
+                {
+                    writer.WriteElementString("name", translations.Creator.Name);
+                }
+
+                if (!string.IsNullOrEmpty(translations.Creator.Link))
+                {
+                    writer.WriteElementString("link", translations.Creator.Link);
+                }
+
+                writer.WriteEndElement();
+            }
 
             // Areas
             foreach (var area in translations.Areas)
@@ -182,6 +237,49 @@ namespace UmbracoTranslationHelper
             writer.WriteEndElement();
             writer.WriteEndDocument();
             writer.Close();
+        }
+
+        public static List<LanguageFile> LoadAllLanguages()
+        {
+            var sourcePath = Settings.GetSetting("UmbracoSourcePath");
+            var files = Directory.GetFiles(sourcePath, "*.xml");
+            var languageFiles = new List<LanguageFile>();
+
+            foreach (var file in files)
+            {
+                try
+                {
+                    languageFiles.Add(LanguageFile.Deserialize(file));
+                }
+                catch (Exception)
+                {
+                    // File is corrupt
+                }
+            }
+
+            return languageFiles;
+        }
+
+        public static List<LanguageFile> LoadLanguagesWithLeadingLanguage()
+        {
+            var sourcePath = Settings.GetSetting("UmbracoSourcePath");
+            var files = Directory.GetFiles(sourcePath, "*.xml");
+            var languageFiles = new List<LanguageFile>();
+
+
+            foreach (var file in files)
+            {
+                try
+                {
+                    languageFiles.Add(LanguageFile.Deserialize(file));
+                }
+                catch (Exception)
+                {
+                    // File is corrupt
+                }
+            }
+
+            return languageFiles;
         }
     }
 }

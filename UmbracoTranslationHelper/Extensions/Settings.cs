@@ -5,13 +5,14 @@ namespace UmbracoTranslationHelper.Extensions
 {
     public static class Settings
     {
+        public static readonly string[] DictionarySubDirectories = new string[] { @"src\Umbraco.Web.UI\umbraco\config\lang", @"umbraco\config\lang", "lang" };
+
         public static string GetSetting(string name)
         {
             using RegistryKey key = Registry.CurrentUser.OpenSubKey(@"SOFTWARE\UmbracoTranslationHelper");
             if (key != null)
             {
-                Object o = key.GetValue(name);
-                return o.ToString();
+                return key.GetValue(name) as string;
             }
 
             return null;

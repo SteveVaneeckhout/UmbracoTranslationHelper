@@ -39,7 +39,7 @@ namespace UmbracoTranslationHelper
             // 
             this.closeButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.closeButton.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.closeButton.Location = new System.Drawing.Point(495, 311);
+            this.closeButton.Location = new System.Drawing.Point(495, 314);
             this.closeButton.Name = "closeButton";
             this.closeButton.Size = new System.Drawing.Size(112, 34);
             this.closeButton.TabIndex = 3;
@@ -55,13 +55,13 @@ namespace UmbracoTranslationHelper
             this.ExplanationLabel.Name = "ExplanationLabel";
             this.ExplanationLabel.Size = new System.Drawing.Size(595, 127);
             this.ExplanationLabel.TabIndex = 1;
-            this.ExplanationLabel.Text = "Sanitizing the dictionary files will:\r\n- Format the XML,\r\n- Remove duplicate tran" +
-    "slations,\r\n- Remove translations that don\'t exist in the leading dictionary (en-" +
-    "us).";
+            this.ExplanationLabel.Text = "Sanitizing the dictionary files will:\r\n- Format the XML,\r\n- Use UTF-8 (no BOM)\r\n-" +
+    " Remove duplicate translations,\r\n- Remove translations that don\'t exist in the l" +
+    "eading dictionary (en-us).";
             // 
             // sanitizeButton
             // 
-            this.sanitizeButton.Location = new System.Drawing.Point(12, 139);
+            this.sanitizeButton.Location = new System.Drawing.Point(12, 159);
             this.sanitizeButton.Name = "sanitizeButton";
             this.sanitizeButton.Size = new System.Drawing.Size(161, 34);
             this.sanitizeButton.TabIndex = 2;
@@ -84,7 +84,7 @@ namespace UmbracoTranslationHelper
             this.AutoScaleDimensions = new System.Drawing.SizeF(144F, 144F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.CancelButton = this.closeButton;
-            this.ClientSize = new System.Drawing.Size(619, 357);
+            this.ClientSize = new System.Drawing.Size(619, 360);
             this.Controls.Add(this.errorsLabel);
             this.Controls.Add(this.sanitizeButton);
             this.Controls.Add(this.ExplanationLabel);

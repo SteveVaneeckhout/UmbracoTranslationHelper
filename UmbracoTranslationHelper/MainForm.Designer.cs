@@ -43,6 +43,7 @@ namespace UmbracoTranslationHelper
             this.optionsMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.helpMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.helpCheckForUpdateMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
             this.helpAboutMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.folderBrowserDialog = new System.Windows.Forms.FolderBrowserDialog();
             this.wordsListView = new System.Windows.Forms.ListView();
@@ -50,7 +51,6 @@ namespace UmbracoTranslationHelper
             this.originalHeader = new System.Windows.Forms.ColumnHeader();
             this.translationHeader = new System.Windows.Forms.ColumnHeader();
             this.onlyNontranslationsCheckbox = new System.Windows.Forms.CheckBox();
-            this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
             this.mainMenu.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -84,7 +84,7 @@ namespace UmbracoTranslationHelper
             // 
             this.fileNewMenuItem.Name = "fileNewMenuItem";
             this.fileNewMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.N)));
-            this.fileNewMenuItem.Size = new System.Drawing.Size(235, 34);
+            this.fileNewMenuItem.Size = new System.Drawing.Size(270, 34);
             this.fileNewMenuItem.Text = "New...";
             this.fileNewMenuItem.Click += new System.EventHandler(this.fileNewMenuItem_Click);
             // 
@@ -92,7 +92,7 @@ namespace UmbracoTranslationHelper
             // 
             this.fileOpenMenuItem.Name = "fileOpenMenuItem";
             this.fileOpenMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.O)));
-            this.fileOpenMenuItem.Size = new System.Drawing.Size(235, 34);
+            this.fileOpenMenuItem.Size = new System.Drawing.Size(270, 34);
             this.fileOpenMenuItem.Text = "Open...";
             this.fileOpenMenuItem.Click += new System.EventHandler(this.fileOpenMenuItem_Click);
             // 
@@ -100,28 +100,28 @@ namespace UmbracoTranslationHelper
             // 
             this.fileSaveMenuItem.Name = "fileSaveMenuItem";
             this.fileSaveMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.S)));
-            this.fileSaveMenuItem.Size = new System.Drawing.Size(235, 34);
+            this.fileSaveMenuItem.Size = new System.Drawing.Size(270, 34);
             this.fileSaveMenuItem.Text = "Save";
             this.fileSaveMenuItem.Click += new System.EventHandler(this.fileSaveMenuItem_Click);
             // 
             // fileCloseMenuItem
             // 
             this.fileCloseMenuItem.Name = "fileCloseMenuItem";
-            this.fileCloseMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.C)));
-            this.fileCloseMenuItem.Size = new System.Drawing.Size(235, 34);
+            this.fileCloseMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.F4)));
+            this.fileCloseMenuItem.Size = new System.Drawing.Size(270, 34);
             this.fileCloseMenuItem.Text = "Close";
             this.fileCloseMenuItem.Click += new System.EventHandler(this.fileCloseMenuItem_Click);
             // 
             // toolStripSeparator1
             // 
             this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(232, 6);
+            this.toolStripSeparator1.Size = new System.Drawing.Size(267, 6);
             // 
             // fileExitMenuItem
             // 
             this.fileExitMenuItem.Name = "fileExitMenuItem";
             this.fileExitMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Alt | System.Windows.Forms.Keys.F4)));
-            this.fileExitMenuItem.Size = new System.Drawing.Size(235, 34);
+            this.fileExitMenuItem.Size = new System.Drawing.Size(270, 34);
             this.fileExitMenuItem.Text = "Exit";
             this.fileExitMenuItem.Click += new System.EventHandler(this.fileExitMenuItem_Click);
             // 
@@ -167,13 +167,19 @@ namespace UmbracoTranslationHelper
             // helpCheckForUpdateMenuItem
             // 
             this.helpCheckForUpdateMenuItem.Name = "helpCheckForUpdateMenuItem";
-            this.helpCheckForUpdateMenuItem.Size = new System.Drawing.Size(270, 34);
+            this.helpCheckForUpdateMenuItem.Size = new System.Drawing.Size(250, 34);
             this.helpCheckForUpdateMenuItem.Text = "Check for update";
+            this.helpCheckForUpdateMenuItem.Click += new System.EventHandler(this.helpCheckForUpdateMenuItem_Click);
+            // 
+            // toolStripSeparator3
+            // 
+            this.toolStripSeparator3.Name = "toolStripSeparator3";
+            this.toolStripSeparator3.Size = new System.Drawing.Size(247, 6);
             // 
             // helpAboutMenuItem
             // 
             this.helpAboutMenuItem.Name = "helpAboutMenuItem";
-            this.helpAboutMenuItem.Size = new System.Drawing.Size(270, 34);
+            this.helpAboutMenuItem.Size = new System.Drawing.Size(250, 34);
             this.helpAboutMenuItem.Text = "About";
             this.helpAboutMenuItem.Click += new System.EventHandler(this.helpAboutMenuItem_Click);
             // 
@@ -229,11 +235,6 @@ namespace UmbracoTranslationHelper
             this.onlyNontranslationsCheckbox.UseVisualStyleBackColor = true;
             this.onlyNontranslationsCheckbox.CheckedChanged += new System.EventHandler(this.onlyNontranslationsCheckbox_CheckedChanged);
             // 
-            // toolStripSeparator3
-            // 
-            this.toolStripSeparator3.Name = "toolStripSeparator3";
-            this.toolStripSeparator3.Size = new System.Drawing.Size(267, 6);
-            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(144F, 144F);
@@ -245,7 +246,7 @@ namespace UmbracoTranslationHelper
             this.DoubleBuffered = true;
             this.MainMenuStrip = this.mainMenu;
             this.Name = "MainForm";
-            this.Text = "Umbraco Backoffice Translation Helper";
+            this.Text = "Umbraco Package & Backoffice Translation Tool";
             this.mainMenu.ResumeLayout(false);
             this.mainMenu.PerformLayout();
             this.ResumeLayout(false);

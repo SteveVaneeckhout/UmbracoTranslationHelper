@@ -13,14 +13,11 @@ namespace UmbracoTranslationHelper
 {
     public partial class MainForm : Form
     {
-        private const string SubDirectory = @"src\Umbraco.Web.UI\umbraco\config\lang";
-        private const string TitleBar = "Umbraco Backoffice Translation Helper";
+        private const string TitleBar = "Umbraco Package & Backoffice Translation Tool";
 
         public LanguageFile Original { get; set; }
         public LanguageFile Translations { get; set; }
-
         public string UmbracoSourcePath { get; set; }
-        public string UmbracoDictionariesPath => Path.Combine(UmbracoSourcePath, SubDirectory);
 
         public MainForm()
         {
@@ -113,6 +110,11 @@ namespace UmbracoTranslationHelper
 
         private void CloseDocument()
         {
+            if (Translations != null && Translations.IsDirty)
+            {
+                //TODO: Really close?
+            }
+
             wordsListView.Groups.Clear();
             wordsListView.Items.Clear();
             Original = null;
@@ -128,7 +130,7 @@ namespace UmbracoTranslationHelper
         {
             var percent = ((decimal)l.TranslationCount / translationCount) * 100;
 
-            return $"{l.Translations.LocalName} ({l.Culture}) - {percent:0}% complete";
+            return $"{l.Language} ({l.Culture}) - {percent:0}% complete";
         }
 
         private void wordsListView_MouseDoubleClick(object sender, MouseEventArgs e)
@@ -211,22 +213,42 @@ namespace UmbracoTranslationHelper
                 {
                     if (folderBrowserDialog.ShowDialog(this) == DialogResult.OK)
                     {
-                        UmbracoSourcePath = folderBrowserDialog.SelectedPath;
-                        Settings.SaveSetting("UmbracoSourcePath", UmbracoSourcePath);
+                        if (Directory.GetFiles(folderBrowserDialog.SelectedPath, "*.xml").Length == 0)
+                        {
+                            // dictionaries not found, try subdirectories.
+
+                            foreach (var subdir in Settings.DictionarySubDirectories)
+                            {
+                                var newDirectory = Path.Combine(folderBrowserDialog.SelectedPath, subdir);
+                                if (Directory.GetFiles(newDirectory, "*.xml").Length > 0)
+                                {
+                                    UmbracoSourcePath = newDirectory;
+                                    Settings.SaveSetting("UmbracoSourcePath", UmbracoSourcePath);
+
+                                    break;
+                                }
+                            }
+
+                            if (UmbracoSourcePath == null)
+                            {
+                                MessageBox.Show(this, "No dictionaries found in " + folderBrowserDialog.SelectedPath, "Files not found", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            }
+                        }
                     }
                 }
 
                 if (UmbracoSourcePath != null)
                 {
-                    if (Directory.Exists(UmbracoDictionariesPath))
+                    if (Directory.Exists(UmbracoSourcePath))
                     {
-                        var files = Directory.GetFiles(UmbracoDictionariesPath, "*.xml");
+                        var leadingLanguageFileName = Settings.GetSetting("LeadingLanguage");
+                        var files = Directory.GetFiles(UmbracoSourcePath, "*.xml");
                         var languageFiles = new List<LanguageFile>();
 
-                        if (files.Any(f => Path.GetFileName(f) == "en_us.xml"))
+                        if (files.Any(f => Path.GetFileName(f) == leadingLanguageFileName))
                         {
                             this.Translations = newFileForm.LanguageFile;
-                            this.Original = LanguageFile.Deserialize(files.Single(f => Path.GetFileName(f) == "en_us.xml"));
+                            this.Original = LanguageFile.Deserialize(files.Single(f => Path.GetFileName(f) == leadingLanguageFileName));
                         }
 
                         fileSaveMenuItem.Enabled = true;
@@ -237,7 +259,7 @@ namespace UmbracoTranslationHelper
                     }
                     else
                     {
-                        MessageBox.Show(this, "Directory with language files not found at: " + UmbracoDictionariesPath, "Directory not found", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        MessageBox.Show(this, "Directory with language files not found at: " + UmbracoSourcePath, "Directory not found", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }
                 }
             }
@@ -250,26 +272,52 @@ namespace UmbracoTranslationHelper
             {
                 if (folderBrowserDialog.ShowDialog(this) == DialogResult.OK)
                 {
-                    UmbracoSourcePath = folderBrowserDialog.SelectedPath;
-                    Settings.SaveSetting("UmbracoSourcePath", UmbracoSourcePath);
+                    if (Directory.GetFiles(folderBrowserDialog.SelectedPath, "*.xml").Length == 0)
+                    {
+                        // dictionaries not found, try subdirectories.
+
+                        foreach (var subdir in Settings.DictionarySubDirectories)
+                        {
+                            var newDirectory = Path.Combine(folderBrowserDialog.SelectedPath, subdir);
+                            if (Directory.GetFiles(newDirectory, "*.xml").Length > 0)
+                            {
+                                UmbracoSourcePath = newDirectory;
+                                Settings.SaveSetting("UmbracoSourcePath", UmbracoSourcePath);
+
+                                break;
+                            }
+                        }
+
+                        if (UmbracoSourcePath == null)
+                        {
+                            MessageBox.Show(this, "No dictionaries found in " + folderBrowserDialog.SelectedPath, "Files not found", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        }
+                    }
                 }
             }
 
             if (UmbracoSourcePath != null)
             {
-                if (Directory.Exists(UmbracoDictionariesPath))
+                if (Directory.Exists(UmbracoSourcePath))
                 {
-                    var files = Directory.GetFiles(UmbracoDictionariesPath, "*.xml");
+                    var files = Directory.GetFiles(UmbracoSourcePath, "*.xml");
                     var languageFiles = new List<LanguageFile>();
 
+                    var leadingLanguageFileName = Settings.GetSetting("LeadingLanguage");
                     LanguageFile leading = null;
-                    if (files.Any(f => Path.GetFileName(f) == "en_us.xml"))
+
+                    if (files.Any(f => Path.GetFileName(f) == leadingLanguageFileName))
                     {
-                        leading = LanguageFile.Deserialize(files.Single(f => Path.GetFileName(f) == "en_us.xml"));
-                        languageFiles.Add(leading);
+                        leading = LanguageFile.Deserialize(files.FirstOrDefault(f => Path.GetFileName(f) == leadingLanguageFileName));
                     }
 
-                    foreach (var file in files.Where(f => !f.EndsWith("en_us.xml")))
+                    if (leading == null)
+                    {
+                        MessageBox.Show(this, "Could not find main dictionary file.", "File not found", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        return;
+                    }
+
+                    foreach (var file in files.Where(f => Path.GetFileName(f) != leadingLanguageFileName))
                     {
                         try
                         {
@@ -281,17 +329,15 @@ namespace UmbracoTranslationHelper
                         }
                     }
 
-                    var baseLanguage = languageFiles.SingleOrDefault(l => l.Translations.Culture == "en-US");
-                    var languageChoiceForm = new LanguageChoice(languageFiles.Where(l => l.Culture != "en-US")
-                                                                                .Select(l => new LanguageDisplay() { Culture = l.Culture, Title = GenerateTitle(l, baseLanguage.TranslationCount) })
-                                                                                .OrderBy(ld => ld.Title)
-                                                                                .ToArray());
+                    var languageChoiceForm = new LanguageChoice(languageFiles.Select(l => new ComboBoxItem() { Value = l.Culture, Text = GenerateTitle(l, leading.TranslationCount) })
+                                                                             .OrderBy(ld => ld.Text)
+                                                                             .ToArray());
 
                     if (languageChoiceForm.ShowDialog(this) == DialogResult.OK)
                     {
                         CloseDocument();
 
-                        Original = baseLanguage;
+                        Original = leading;
                         Translations = languageFiles.FirstOrDefault(l => l.Culture == languageChoiceForm.SelectedLanguage);
 
                         Text = TitleBar + " - " + this.Translations.Translations.LocalName;
@@ -301,19 +347,18 @@ namespace UmbracoTranslationHelper
 
                         RefreshListView();
                     }
-
                     languageChoiceForm.Dispose();
                 }
                 else
                 {
-                    MessageBox.Show(this, "Directory with language files not found at: " + UmbracoDictionariesPath, "Directory not found", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show(this, "Directory with language files not found at: " + UmbracoSourcePath, "Directory not found", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
         }
 
         private void fileSaveMenuItem_Click(object sender, EventArgs e)
         {
-            LanguageFile.Serialize(Translations, Path.Combine(UmbracoSourcePath, SubDirectory));
+            LanguageFile.Serialize(Translations, UmbracoSourcePath);
         }
 
         private void fileCloseMenuItem_Click(object sender, EventArgs e)
@@ -323,13 +368,14 @@ namespace UmbracoTranslationHelper
 
         private void fileExitMenuItem_Click(object sender, EventArgs e)
         {
-            this.Close();
+            CloseDocument();
+            Close();
         }
 
         /* Tools menu */
         private void sanitizeDictionaryFilesMenuItem_Click(object sender, EventArgs e)
         {
-            var sanitizeForm = new SanitizeForm(Path.Combine(UmbracoSourcePath, SubDirectory));
+            var sanitizeForm = new SanitizeForm();
 
             sanitizeForm.ShowDialog();
             sanitizeForm.Dispose();
@@ -337,25 +383,25 @@ namespace UmbracoTranslationHelper
 
         private void optionsMenuItem_Click(object sender, EventArgs e)
         {
-            var optionsForm = new OptionsForm()
-            {
-                SourcePath = UmbracoSourcePath
-            };
+            var optionsForm = new OptionsForm();
 
             if (optionsForm.ShowDialog(this) == DialogResult.OK)
             {
-                UmbracoSourcePath = optionsForm.SourcePath;
-                Settings.SaveSetting("UmbracoSourcePath", UmbracoSourcePath);
+                UmbracoSourcePath = Settings.GetSetting("UmbracoSourcePath");
             }
             optionsForm.Dispose();
         }
 
         /* Help menu */
+        private void helpCheckForUpdateMenuItem_Click(object sender, EventArgs e)
+        {
+            LinkLauncher.Launch("https://github.com/SteveVaneeckhout/UmbracoTranslationHelper/releases");
+        }
         private void helpAboutMenuItem_Click(object sender, EventArgs e)
         {
             var aboutForm = new AboutForm();
 
-            aboutForm.ShowDialog();
+            aboutForm.ShowDialog(this);
             aboutForm.Dispose();
         }
     }

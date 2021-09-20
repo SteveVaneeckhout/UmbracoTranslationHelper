@@ -15,18 +15,24 @@ namespace UmbracoTranslationHelper
     {
         private const string TitleBar = "Umbraco Package & Backoffice Translation Tool";
 
-        public LanguageFile Original { get; set; }
-        public LanguageFile Translations { get; set; }
-        public string UmbracoSourcePath { get; set; }
+        private LanguageFile Original { get; set; }
+        private LanguageFile Translations { get; set; }
+        private string UmbracoSourcePath { get; set; }
 
         public MainForm()
         {
             InitializeComponent();
 
-            UmbracoSourcePath = Settings.GetSetting("UmbracoSourcePath");
-
             fileSaveMenuItem.Enabled = false;
             fileCloseMenuItem.Enabled = false;
+
+            UmbracoSourcePath = Settings.GetUmbracoSourcePath();
+
+            if (UmbracoSourcePath == null)
+            {
+                fileNewMenuItem.Enabled = false;
+                fileOpenMenuItem.Enabled = false;
+            }
         }
 
         private void onlyNontranslationsCheckbox_CheckedChanged(object sender, EventArgs e)
@@ -108,11 +114,26 @@ namespace UmbracoTranslationHelper
             item.SubItems[2].Text = key.Value;
         }
 
-        private void CloseDocument()
+        /// <summary>
+        /// Closes and unloads the document.
+        /// </summary>
+        /// <returns>Returns true when document is closed, false when document close was cancelled by the user</returns>
+        private bool CloseDocument()
         {
             if (Translations != null && Translations.IsDirty)
             {
-                //TODO: Really close?
+                var result = MessageBox.Show(this, "Do you want to save the changes in this translation?", "Save changes", MessageBoxButtons.YesNoCancel);
+                switch (result)
+                {
+                    case DialogResult.Cancel:
+                        return false;
+                    case DialogResult.Yes:
+                        SaveDocument();
+                        break;
+                    case DialogResult.No:
+                    default:
+                        break;
+                }
             }
 
             wordsListView.Groups.Clear();
@@ -123,7 +144,16 @@ namespace UmbracoTranslationHelper
             fileSaveMenuItem.Enabled = false;
             fileCloseMenuItem.Enabled = false;
 
-            Text = TitleBar;
+            SetFormTitle();
+
+            return true;
+        }
+
+        private void SaveDocument()
+        {
+            LanguageFile.Serialize(Translations, UmbracoSourcePath);
+            Translations.IsDirty = false;
+            SetFormTitle();
         }
 
         private static string GenerateTitle(LanguageFile l, int translationCount)
@@ -194,19 +224,34 @@ namespace UmbracoTranslationHelper
                         area.Keys.Add(key);
                     }
 
-                    key.Value = form.Translation;
-
-                    RefreshListViewSelectedItem(key);
+                    if (key.Value != form.Translation)
+                    {
+                        key.Value = form.Translation;
+                        Translations.IsDirty = true;
+                        SetFormTitle();
+                        RefreshListViewSelectedItem(key);
+                    }
                 }
                 form.Dispose();
             }
         }
 
+        private void SetFormTitle()
+        {
+            Text = TitleBar + (Translations == null ? string.Empty : " - " + Translations.Translations.LocalName + (Translations.IsDirty ? "*" : string.Empty));
+        }
+
         /* File menu */
         private void fileNewMenuItem_Click(object sender, EventArgs e)
         {
-            var newFileForm = new NewFileForm();
+            var isClosed = CloseDocument();
 
+            if (!isClosed)
+            {
+                return;
+            }
+
+            var newFileForm = new NewFileForm();
             if (newFileForm.ShowDialog() == DialogResult.OK)
             {
                 if (UmbracoSourcePath == null)
@@ -223,7 +268,7 @@ namespace UmbracoTranslationHelper
                                 if (Directory.GetFiles(newDirectory, "*.xml").Length > 0)
                                 {
                                     UmbracoSourcePath = newDirectory;
-                                    Settings.SaveSetting("UmbracoSourcePath", UmbracoSourcePath);
+                                    Settings.SaveUmbracoSourcePath(UmbracoSourcePath);
 
                                     break;
                                 }
@@ -241,7 +286,7 @@ namespace UmbracoTranslationHelper
                 {
                     if (Directory.Exists(UmbracoSourcePath))
                     {
-                        var leadingLanguageFileName = Settings.GetSetting("LeadingLanguage");
+                        var leadingLanguageFileName = Settings.GetLeadingLanguage();
                         var files = Directory.GetFiles(UmbracoSourcePath, "*.xml");
                         var languageFiles = new List<LanguageFile>();
 
@@ -254,7 +299,7 @@ namespace UmbracoTranslationHelper
                         fileSaveMenuItem.Enabled = true;
                         fileCloseMenuItem.Enabled = true;
 
-                        Text = TitleBar + " - " + this.Translations.Translations.LocalName;
+                        SetFormTitle();
                         RefreshListView();
                     }
                     else
@@ -268,6 +313,13 @@ namespace UmbracoTranslationHelper
 
         private void fileOpenMenuItem_Click(object sender, EventArgs e)
         {
+            var isClosed = CloseDocument();
+
+            if (!isClosed)
+            {
+                return;
+            }
+
             if (UmbracoSourcePath == null)
             {
                 if (folderBrowserDialog.ShowDialog(this) == DialogResult.OK)
@@ -282,7 +334,7 @@ namespace UmbracoTranslationHelper
                             if (Directory.GetFiles(newDirectory, "*.xml").Length > 0)
                             {
                                 UmbracoSourcePath = newDirectory;
-                                Settings.SaveSetting("UmbracoSourcePath", UmbracoSourcePath);
+                                Settings.SaveUmbracoSourcePath(UmbracoSourcePath);
 
                                 break;
                             }
@@ -303,7 +355,7 @@ namespace UmbracoTranslationHelper
                     var files = Directory.GetFiles(UmbracoSourcePath, "*.xml");
                     var languageFiles = new List<LanguageFile>();
 
-                    var leadingLanguageFileName = Settings.GetSetting("LeadingLanguage");
+                    var leadingLanguageFileName = Settings.GetLeadingLanguage();
                     LanguageFile leading = null;
 
                     if (files.Any(f => Path.GetFileName(f) == leadingLanguageFileName))
@@ -335,12 +387,10 @@ namespace UmbracoTranslationHelper
 
                     if (languageChoiceForm.ShowDialog(this) == DialogResult.OK)
                     {
-                        CloseDocument();
-
                         Original = leading;
                         Translations = languageFiles.FirstOrDefault(l => l.Culture == languageChoiceForm.SelectedLanguage);
 
-                        Text = TitleBar + " - " + this.Translations.Translations.LocalName;
+                        SetFormTitle();
 
                         fileSaveMenuItem.Enabled = true;
                         fileCloseMenuItem.Enabled = true;
@@ -358,7 +408,7 @@ namespace UmbracoTranslationHelper
 
         private void fileSaveMenuItem_Click(object sender, EventArgs e)
         {
-            LanguageFile.Serialize(Translations, UmbracoSourcePath);
+            SaveDocument();
         }
 
         private void fileCloseMenuItem_Click(object sender, EventArgs e)
@@ -375,6 +425,13 @@ namespace UmbracoTranslationHelper
         /* Tools menu */
         private void sanitizeDictionaryFilesMenuItem_Click(object sender, EventArgs e)
         {
+            var isClosed = CloseDocument();
+
+            if (!isClosed)
+            {
+                return;
+            }
+
             var sanitizeForm = new SanitizeForm();
 
             sanitizeForm.ShowDialog();
@@ -383,11 +440,20 @@ namespace UmbracoTranslationHelper
 
         private void optionsMenuItem_Click(object sender, EventArgs e)
         {
-            var optionsForm = new OptionsForm();
+            var isClosed = CloseDocument();
 
+            if (!isClosed)
+            {
+                return;
+            }
+
+            var optionsForm = new OptionsForm();
             if (optionsForm.ShowDialog(this) == DialogResult.OK)
             {
-                UmbracoSourcePath = Settings.GetSetting("UmbracoSourcePath");
+                UmbracoSourcePath = Settings.GetUmbracoSourcePath();
+
+                fileNewMenuItem.Enabled = true;
+                fileOpenMenuItem.Enabled = true;
             }
             optionsForm.Dispose();
         }

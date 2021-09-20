@@ -241,7 +241,7 @@ namespace UmbracoTranslationHelper
 
         public static List<LanguageFile> LoadAllLanguages()
         {
-            var sourcePath = Settings.GetSetting("UmbracoSourcePath");
+            var sourcePath = Settings.GetUmbracoSourcePath();
             var files = Directory.GetFiles(sourcePath, "*.xml");
             var languageFiles = new List<LanguageFile>();
 
@@ -262,7 +262,7 @@ namespace UmbracoTranslationHelper
 
         public static List<LanguageFile> LoadLanguagesWithLeadingLanguage()
         {
-            var sourcePath = Settings.GetSetting("UmbracoSourcePath");
+            var sourcePath = Settings.GetUmbracoSourcePath();
             var files = Directory.GetFiles(sourcePath, "*.xml");
             var languageFiles = new List<LanguageFile>();
 

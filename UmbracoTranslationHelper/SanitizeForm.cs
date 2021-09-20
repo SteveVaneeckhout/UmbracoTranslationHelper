@@ -24,8 +24,8 @@ namespace UmbracoTranslationHelper
 
         private void sanitizeButton_Click(object sender, EventArgs e)
         {
-            var leadingLanguageFileName = Settings.GetSetting("LeadingLanguage");
-            var dictionariesDirectory = Settings.GetSetting("UmbracoSourcePath");
+            var leadingLanguageFileName = Settings.GetLeadingLanguage();
+            var dictionariesDirectory = Settings.GetUmbracoSourcePath();
             var files = Directory.GetFiles(dictionariesDirectory, "*.xml");
             var exceptions = new Dictionary<string, string>();
 

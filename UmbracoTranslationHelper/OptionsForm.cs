@@ -16,10 +16,10 @@ namespace UmbracoTranslationHelper
         {
             InitializeComponent();
 
-            var sourcePath = Settings.GetSetting("UmbracoSourcePath");
+            var sourcePath = Settings.GetUmbracoSourcePath();
             sourcePathTextbox.Text = sourcePath;
 
-            LoadLanguages(sourcePath, Settings.GetSetting("LeadingLanguage"));
+            LoadLanguages(sourcePath, Settings.GetLeadingLanguage());
         }
 
         private void LoadLanguages(string sourcePath, string selectedLanguage = null)
@@ -92,8 +92,8 @@ namespace UmbracoTranslationHelper
 
         private void okButton_Click(object sender, EventArgs e)
         {
-            Settings.SaveSetting("UmbracoSourcePath", sourcePathTextbox.Text);
-            Settings.SaveSetting("LeadingLanguage", ((ComboBoxItem)leadingLanguagesComboBox.SelectedItem).Value);
+            Settings.SaveUmbracoSourcePath(sourcePathTextbox.Text);
+            Settings.SaveLeadingLanguage(((ComboBoxItem)leadingLanguagesComboBox.SelectedItem).Value);
             Close();
         }
 

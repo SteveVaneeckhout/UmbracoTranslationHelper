@@ -7,7 +7,7 @@ namespace UmbracoTranslationHelper.Extensions
     {
         public static readonly string[] DictionarySubDirectories = new string[] { @"src\Umbraco.Web.UI\umbraco\config\lang", @"umbraco\config\lang", "lang" };
 
-        public static string GetSetting(string name)
+        private static string GetSetting(string name)
         {
             using RegistryKey key = Registry.CurrentUser.OpenSubKey(@"SOFTWARE\UmbracoTranslationHelper");
             if (key != null)
@@ -18,10 +18,30 @@ namespace UmbracoTranslationHelper.Extensions
             return null;
         }
 
-        public static void SaveSetting(string name, string value)
+        private static void SaveSetting(string name, string value)
         {
             using RegistryKey key = Registry.CurrentUser.CreateSubKey(@"SOFTWARE\UmbracoTranslationHelper");
             key.SetValue(name, value);
+        }
+
+        public static string GetUmbracoSourcePath()
+        {
+            return GetSetting("UmbracoSourcePath");
+        }
+
+        public static void SaveUmbracoSourcePath(string path)
+        {
+            SaveSetting("UmbracoSourcePath", path);
+        }
+
+        public static string GetLeadingLanguage()
+        {
+            return GetSetting("LeadingLanguage");
+        }
+
+        public static void SaveLeadingLanguage(string leadingLanguage)
+        {
+            SaveSetting("LeadingLanguage", leadingLanguage);
         }
     }
 }

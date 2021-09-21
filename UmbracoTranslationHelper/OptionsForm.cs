@@ -12,14 +12,21 @@ namespace UmbracoTranslationHelper
 {
     public partial class OptionsForm : Form
     {
+        private readonly string[] DictionarySubDirectories = new string[] { @"src\Umbraco.Web.UI\umbraco\config\lang", @"umbraco\config\lang", "lang" };
+
         public OptionsForm()
         {
             InitializeComponent();
 
             var sourcePath = Settings.GetUmbracoSourcePath();
-            sourcePathTextbox.Text = sourcePath;
 
-            LoadLanguages(sourcePath, Settings.GetLeadingLanguage());
+            if (sourcePath != null)
+            {
+                sourcePathTextbox.Text = sourcePath;
+                LoadLanguages(sourcePath, Settings.GetLeadingLanguage());
+            }
+
+            okButton.Enabled = leadingLanguagesComboBox.SelectedItem != null;
         }
 
         private void LoadLanguages(string sourcePath, string selectedLanguage = null)
@@ -44,10 +51,23 @@ namespace UmbracoTranslationHelper
             leadingLanguagesComboBox.Items.Clear();
             leadingLanguagesComboBox.Items.AddRange(comboBoxItems);
 
-            if (selectedLanguage != null)
+            if (sourcePath.Contains(@"umbraco\config\lang"))
+            {
+                // Leading language for Umbraco is en_us.xml
+                leadingLanguagesComboBox.SelectedItem = comboBoxItems.FirstOrDefault(l => l.Value == "en_us.xml");
+                leadingLanguagesComboBox.Enabled = false;
+            }
+            else if (selectedLanguage != null)
             {
                 leadingLanguagesComboBox.SelectedItem = comboBoxItems.FirstOrDefault(l => l.Value == selectedLanguage);
+                leadingLanguagesComboBox.Enabled = true;
             }
+            else
+            {
+                leadingLanguagesComboBox.Enabled = true;
+            }
+
+            okButton.Enabled = leadingLanguagesComboBox.SelectedItem != null;
         }
 
         private void browseButton_Click(object sender, EventArgs e)
@@ -61,7 +81,7 @@ namespace UmbracoTranslationHelper
                     // dictionaries not found, try subdirectories.
                     var dictionariesFound = false;
 
-                    foreach (var subdir in Settings.DictionarySubDirectories)
+                    foreach (var subdir in DictionarySubDirectories)
                     {
                         newDirectory = Path.Combine(folderBrowserDialog.SelectedPath, subdir);
 
@@ -88,6 +108,11 @@ namespace UmbracoTranslationHelper
                     LoadLanguages(newDirectory);
                 }
             }
+        }
+
+        private void leadingLanguagesComboBox_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            okButton.Enabled = leadingLanguagesComboBox.SelectedItem != null;
         }
 
         private void okButton_Click(object sender, EventArgs e)

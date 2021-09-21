@@ -97,6 +97,7 @@ namespace UmbracoTranslationHelper
             this.leadingLanguagesComboBox.Size = new System.Drawing.Size(474, 33);
             this.leadingLanguagesComboBox.TabIndex = 4;
             this.leadingLanguagesComboBox.ValueMember = "Value";
+            this.leadingLanguagesComboBox.SelectedIndexChanged += new System.EventHandler(this.leadingLanguagesComboBox_SelectedIndexChanged);
             // 
             // leadingLanguageLabel
             // 

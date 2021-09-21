@@ -32,6 +32,7 @@ namespace UmbracoTranslationHelper
             {
                 fileNewMenuItem.Enabled = false;
                 fileOpenMenuItem.Enabled = false;
+                sanitizeDictionaryFilesMenuItem.Enabled = false;
             }
         }
 
@@ -54,7 +55,7 @@ namespace UmbracoTranslationHelper
             {
                 var group = new ListViewGroup(area.Alias);
 
-                foreach (var word in area.Keys)
+                foreach (var word in area.Keys.Where(k => k.Alias != null /* Filter out comments */))
                 {
                     var item = new ListViewItem(word.Alias)
                     {
@@ -254,34 +255,6 @@ namespace UmbracoTranslationHelper
             var newFileForm = new NewFileForm();
             if (newFileForm.ShowDialog() == DialogResult.OK)
             {
-                if (UmbracoSourcePath == null)
-                {
-                    if (folderBrowserDialog.ShowDialog(this) == DialogResult.OK)
-                    {
-                        if (Directory.GetFiles(folderBrowserDialog.SelectedPath, "*.xml").Length == 0)
-                        {
-                            // dictionaries not found, try subdirectories.
-
-                            foreach (var subdir in Settings.DictionarySubDirectories)
-                            {
-                                var newDirectory = Path.Combine(folderBrowserDialog.SelectedPath, subdir);
-                                if (Directory.GetFiles(newDirectory, "*.xml").Length > 0)
-                                {
-                                    UmbracoSourcePath = newDirectory;
-                                    Settings.SaveUmbracoSourcePath(UmbracoSourcePath);
-
-                                    break;
-                                }
-                            }
-
-                            if (UmbracoSourcePath == null)
-                            {
-                                MessageBox.Show(this, "No dictionaries found in " + folderBrowserDialog.SelectedPath, "Files not found", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                            }
-                        }
-                    }
-                }
-
                 if (UmbracoSourcePath != null)
                 {
                     if (Directory.Exists(UmbracoSourcePath))
@@ -318,34 +291,6 @@ namespace UmbracoTranslationHelper
             if (!isClosed)
             {
                 return;
-            }
-
-            if (UmbracoSourcePath == null)
-            {
-                if (folderBrowserDialog.ShowDialog(this) == DialogResult.OK)
-                {
-                    if (Directory.GetFiles(folderBrowserDialog.SelectedPath, "*.xml").Length == 0)
-                    {
-                        // dictionaries not found, try subdirectories.
-
-                        foreach (var subdir in Settings.DictionarySubDirectories)
-                        {
-                            var newDirectory = Path.Combine(folderBrowserDialog.SelectedPath, subdir);
-                            if (Directory.GetFiles(newDirectory, "*.xml").Length > 0)
-                            {
-                                UmbracoSourcePath = newDirectory;
-                                Settings.SaveUmbracoSourcePath(UmbracoSourcePath);
-
-                                break;
-                            }
-                        }
-
-                        if (UmbracoSourcePath == null)
-                        {
-                            MessageBox.Show(this, "No dictionaries found in " + folderBrowserDialog.SelectedPath, "Files not found", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                        }
-                    }
-                }
             }
 
             if (UmbracoSourcePath != null)
@@ -454,6 +399,7 @@ namespace UmbracoTranslationHelper
 
                 fileNewMenuItem.Enabled = true;
                 fileOpenMenuItem.Enabled = true;
+                sanitizeDictionaryFilesMenuItem.Enabled = true;
             }
             optionsForm.Dispose();
         }

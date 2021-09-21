@@ -34,6 +34,7 @@ namespace UmbracoTranslationHelper
                 // Allow Enter and Tab keys to be used in the editor in case of newlines.
                 translationTextbox.AcceptsReturn = value.Contains('\r');
                 translationTextbox.AcceptsTab = value.Contains('\r');
+                translationTextbox.ScrollBars = value.Contains('\r') ? ScrollBars.Both : ScrollBars.None;
             }
         }
 

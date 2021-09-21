@@ -51,7 +51,7 @@ namespace UmbracoTranslationHelper
             this.okButton.Name = "okButton";
             this.okButton.Size = new System.Drawing.Size(112, 34);
             this.okButton.TabIndex = 6;
-            this.okButton.Text = "OK";
+            this.okButton.Text = "&OK";
             this.okButton.UseVisualStyleBackColor = true;
             this.okButton.Click += new System.EventHandler(this.Button_Click);
             // 

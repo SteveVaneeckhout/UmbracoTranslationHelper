@@ -18,6 +18,8 @@ namespace UmbracoTranslationHelper
         private LanguageFile Original { get; set; }
         private LanguageFile Translations { get; set; }
         private string UmbracoSourcePath { get; set; }
+        private List<int> SearchResults { get; set; }
+        private bool SearchResultsCalculated { get; set; }
 
         public MainForm()
         {
@@ -25,6 +27,8 @@ namespace UmbracoTranslationHelper
 
             fileSaveMenuItem.Enabled = false;
             fileCloseMenuItem.Enabled = false;
+            SearchResults = new List<int>();
+            SearchResultsCalculated = false;
 
             UmbracoSourcePath = Settings.GetUmbracoSourcePath();
 
@@ -39,6 +43,69 @@ namespace UmbracoTranslationHelper
         private void onlyNontranslationsCheckbox_CheckedChanged(object sender, EventArgs e)
         {
             RefreshListView();
+        }
+        private void searchTextBox_TextChanged(object sender, EventArgs e)
+        {
+            SearchResults.Clear();
+            SearchResultsCalculated = false;
+        }
+
+        private void findButton_Click(object sender, EventArgs e)
+        {
+            if (searchTextBox.Text.Length == 0 || Original == null || Translations == null)
+            {
+                return;
+            }
+
+            if (!SearchResultsCalculated)
+            {
+                this.UseWaitCursor = true;
+
+                for (int i = 0; i < wordsListView.Items.Count; i++)
+                {
+                    if (wordsListView.Items[i].Text.Contains(searchTextBox.Text, StringComparison.InvariantCultureIgnoreCase))
+                    {
+                        SearchResults.Add(i);
+                    }
+                }
+
+                this.UseWaitCursor = false;
+
+                System.Diagnostics.Debug.WriteLine("Search results found: " + SearchResults.Count);
+                SearchResultsCalculated = true;
+            }
+
+            if (SearchResults.Count == 0)
+            {
+                return;
+            }
+
+            int startIndex = -1;
+
+            if (wordsListView.SelectedIndices.Count > 0)
+            {
+                startIndex = wordsListView.SelectedIndices[0];
+            }
+
+            var nextResult = SearchResults.Where(s => s > startIndex).DefaultIfEmpty(-1).First();
+
+            if (nextResult == -1)
+            {
+                SelectListItem(SearchResults[0]);
+            }
+            else
+            {
+                SelectListItem(nextResult);
+            }
+        }
+
+        private void SelectListItem(int index)
+        {
+            wordsListView.SelectedIndices.Clear();
+            wordsListView.SelectedIndices.Add(index);
+            wordsListView.FocusedItem = wordsListView.SelectedItems[0];
+            wordsListView.SelectedItems[0].EnsureVisible();
+            wordsListView.Focus();
         }
 
         private void RefreshListView()
@@ -144,6 +211,8 @@ namespace UmbracoTranslationHelper
             onlyNontranslationsCheckbox.Checked = false;
             fileSaveMenuItem.Enabled = false;
             fileCloseMenuItem.Enabled = false;
+            SearchResults = new List<int>();
+            SearchResultsCalculated = false;
 
             SetFormTitle();
 

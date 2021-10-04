@@ -50,6 +50,9 @@ namespace UmbracoTranslationHelper
             this.originalHeader = new System.Windows.Forms.ColumnHeader();
             this.translationHeader = new System.Windows.Forms.ColumnHeader();
             this.onlyNontranslationsCheckbox = new System.Windows.Forms.CheckBox();
+            this.searchLabel = new System.Windows.Forms.Label();
+            this.searchTextBox = new System.Windows.Forms.TextBox();
+            this.findButton = new System.Windows.Forms.Button();
             this.mainMenu.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -195,6 +198,7 @@ namespace UmbracoTranslationHelper
             this.wordsListView.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
             this.wordsListView.HideSelection = false;
             this.wordsListView.Location = new System.Drawing.Point(12, 87);
+            this.wordsListView.MultiSelect = false;
             this.wordsListView.Name = "wordsListView";
             this.wordsListView.Size = new System.Drawing.Size(1888, 1005);
             this.wordsListView.TabIndex = 5;
@@ -221,7 +225,7 @@ namespace UmbracoTranslationHelper
             // onlyNontranslationsCheckbox
             // 
             this.onlyNontranslationsCheckbox.AutoSize = true;
-            this.onlyNontranslationsCheckbox.Location = new System.Drawing.Point(12, 36);
+            this.onlyNontranslationsCheckbox.Location = new System.Drawing.Point(12, 46);
             this.onlyNontranslationsCheckbox.Name = "onlyNontranslationsCheckbox";
             this.onlyNontranslationsCheckbox.Size = new System.Drawing.Size(283, 29);
             this.onlyNontranslationsCheckbox.TabIndex = 6;
@@ -229,11 +233,41 @@ namespace UmbracoTranslationHelper
             this.onlyNontranslationsCheckbox.UseVisualStyleBackColor = true;
             this.onlyNontranslationsCheckbox.CheckedChanged += new System.EventHandler(this.onlyNontranslationsCheckbox_CheckedChanged);
             // 
+            // searchLabel
+            // 
+            this.searchLabel.AutoSize = true;
+            this.searchLabel.Location = new System.Drawing.Point(412, 47);
+            this.searchLabel.Name = "searchLabel";
+            this.searchLabel.Size = new System.Drawing.Size(64, 25);
+            this.searchLabel.TabIndex = 7;
+            this.searchLabel.Text = "&Search";
+            // 
+            // searchTextBox
+            // 
+            this.searchTextBox.Location = new System.Drawing.Point(482, 44);
+            this.searchTextBox.Name = "searchTextBox";
+            this.searchTextBox.Size = new System.Drawing.Size(291, 31);
+            this.searchTextBox.TabIndex = 8;
+            this.searchTextBox.TextChanged += new System.EventHandler(this.searchTextBox_TextChanged);
+            // 
+            // findButton
+            // 
+            this.findButton.Location = new System.Drawing.Point(779, 42);
+            this.findButton.Name = "findButton";
+            this.findButton.Size = new System.Drawing.Size(180, 34);
+            this.findButton.TabIndex = 9;
+            this.findButton.Text = "&Find";
+            this.findButton.UseVisualStyleBackColor = true;
+            this.findButton.Click += new System.EventHandler(this.findButton_Click);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(144F, 144F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.ClientSize = new System.Drawing.Size(1912, 1104);
+            this.Controls.Add(this.findButton);
+            this.Controls.Add(this.searchTextBox);
+            this.Controls.Add(this.searchLabel);
             this.Controls.Add(this.onlyNontranslationsCheckbox);
             this.Controls.Add(this.wordsListView);
             this.Controls.Add(this.mainMenu);
@@ -271,6 +305,9 @@ namespace UmbracoTranslationHelper
         private System.Windows.Forms.ToolStripMenuItem fileNewMenuItem;
         private System.Windows.Forms.ToolStripMenuItem fileCloseMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator3;
+        private System.Windows.Forms.Label searchLabel;
+        private System.Windows.Forms.TextBox searchTextBox;
+        private System.Windows.Forms.Button findButton;
     }
 }
 

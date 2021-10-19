@@ -4,12 +4,19 @@
     {
         public static string Limit(this string word, int chars)
         {
-            if (string.IsNullOrEmpty(word) || word.Length <= chars)
+            if (word is null)
             {
-                return word;
+                return "";
             }
 
-            return word.Substring(0, chars) + "...";
+            var tmpWord = word.Trim();
+
+            if (tmpWord == "" || tmpWord.Length <= chars)
+            {
+                return tmpWord;
+            }
+
+            return tmpWord.Substring(0, chars) + "…";
         }
     }
 }

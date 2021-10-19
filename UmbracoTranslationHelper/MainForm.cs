@@ -25,6 +25,12 @@ namespace UmbracoTranslationHelper
         {
             InitializeComponent();
 
+            // Gets rid of flickering when resizing columns
+            wordsListView
+                .GetType()
+                .GetProperty("DoubleBuffered", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic)
+                .SetValue(wordsListView, true, null);
+
             fileSaveMenuItem.Enabled = false;
             fileCloseMenuItem.Enabled = false;
             SearchResults = new List<int>();
@@ -63,7 +69,9 @@ namespace UmbracoTranslationHelper
 
                 for (int i = 0; i < wordsListView.Items.Count; i++)
                 {
-                    if (wordsListView.Items[i].Text.Contains(searchTextBox.Text, StringComparison.InvariantCultureIgnoreCase))
+                    if (wordsListView.Items[i].Text.Contains(searchTextBox.Text, StringComparison.InvariantCultureIgnoreCase)
+                        || wordsListView.Items[i].SubItems[1].Text.Contains(searchTextBox.Text, StringComparison.InvariantCultureIgnoreCase)
+                        || wordsListView.Items[i].SubItems[2].Text.Contains(searchTextBox.Text, StringComparison.InvariantCultureIgnoreCase))
                     {
                         SearchResults.Add(i);
                     }
@@ -129,7 +137,7 @@ namespace UmbracoTranslationHelper
                         Tag = area.Alias + "|" + word.Alias
                     };
 
-                    item.SubItems.Add(word.Value.Limit(50));
+                    item.SubItems.Add(word.Value.Limit(100));
 
                     // Try to find translation
                     var translationArea = Translations.Translations.Areas.FirstOrDefault(a => a.Alias == area.Alias);
@@ -142,7 +150,7 @@ namespace UmbracoTranslationHelper
                         if (translatedWord != null)
                         {
                             hasTranslation = true;
-                            item.SubItems.Add(translatedWord.Value.Limit(50));
+                            item.SubItems.Add(translatedWord.Value.Limit(100));
                         }
                         else
                         {

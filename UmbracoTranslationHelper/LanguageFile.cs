@@ -43,6 +43,8 @@ namespace UmbracoTranslationHelper
         public Language Translations { get; set; }
         public bool IsDirty { get; set; }
 
+        private static readonly byte[] NEWLINE_BYTES = Encoding.UTF8.GetBytes(Environment.NewLine);
+
         public static LanguageFile Deserialize(string filename, Language leading = null)
         {
             var result = new Language();
@@ -147,8 +149,8 @@ namespace UmbracoTranslationHelper
                 Encoding = new UTF8Encoding(false) // no BOM
             };
 
-            using Stream fs = new FileStream(Path.Combine(path, languageFile.FileName), FileMode.Create);
-            using XmlWriter writer = XmlTextWriter.Create(fs, settings);
+            using var fs = new FileStream(Path.Combine(path, languageFile.FileName), FileMode.Create);
+            using var writer = XmlTextWriter.Create(fs, settings);
 
             // Manually generate document because key values only use a <![CDATA[ ]]> when the value contains HTML.
             writer.WriteStartDocument(true);
@@ -236,6 +238,11 @@ namespace UmbracoTranslationHelper
 
             writer.WriteEndElement();
             writer.WriteEndDocument();
+            writer.Flush();
+
+            // End the file with a newline for Git
+            fs.Write(NEWLINE_BYTES, 0, NEWLINE_BYTES.Length);
+
             writer.Close();
         }
 

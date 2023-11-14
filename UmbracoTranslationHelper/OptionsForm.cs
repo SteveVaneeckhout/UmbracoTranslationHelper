@@ -12,7 +12,7 @@ namespace UmbracoTranslationHelper
 {
     public partial class OptionsForm : Form
     {
-        private readonly string[] DictionarySubDirectories = new string[] { @"src\Umbraco.Web.UI\umbraco\config\lang", @"umbraco\config\lang", "lang" };
+        private readonly string[] DictionarySubDirectories = new string[] { @"src\Umbraco.Core\EmbeddedResources\Lang\", @"src\Umbraco.Web.UI\umbraco\config\lang", @"umbraco\config\lang", "lang" };
 
         public OptionsForm()
         {

@@ -71,7 +71,9 @@ namespace UmbracoTranslationHelper
 
         private void translationLinkLabel_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            Extensions.LinkLauncher.Launch($"https://translate.google.com/?sl=en&tl={TranslationCulture}&text={HttpUtility.UrlEncode(this.Original)}&op=translate");
+            var language = TranslationCulture[..2];
+
+            Extensions.LinkLauncher.Launch($"https://translate.google.com/?sl=en&tl={language}&text={HttpUtility.UrlEncode(this.Original)}&op=translate");
         }
 
         private void translationTextbox_TextChanged(object sender, EventArgs e)

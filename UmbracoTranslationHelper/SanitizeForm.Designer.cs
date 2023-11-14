@@ -29,78 +29,80 @@ namespace UmbracoTranslationHelper
         /// </summary>
         private void InitializeComponent()
         {
-            this.closeButton = new System.Windows.Forms.Button();
-            this.ExplanationLabel = new System.Windows.Forms.Label();
-            this.sanitizeButton = new System.Windows.Forms.Button();
-            this.errorsLabel = new System.Windows.Forms.Label();
-            this.SuspendLayout();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(SanitizeForm));
+            closeButton = new System.Windows.Forms.Button();
+            ExplanationLabel = new System.Windows.Forms.Label();
+            sanitizeButton = new System.Windows.Forms.Button();
+            errorsLabel = new System.Windows.Forms.Label();
+            SuspendLayout();
             // 
             // closeButton
             // 
-            this.closeButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.closeButton.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.closeButton.Location = new System.Drawing.Point(495, 314);
-            this.closeButton.Name = "closeButton";
-            this.closeButton.Size = new System.Drawing.Size(112, 34);
-            this.closeButton.TabIndex = 3;
-            this.closeButton.Text = "Close";
-            this.closeButton.UseVisualStyleBackColor = true;
-            this.closeButton.Click += new System.EventHandler(this.closeButton_Click);
+            closeButton.Anchor = System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right;
+            closeButton.DialogResult = System.Windows.Forms.DialogResult.Cancel;
+            closeButton.Location = new System.Drawing.Point(660, 419);
+            closeButton.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            closeButton.Name = "closeButton";
+            closeButton.Size = new System.Drawing.Size(149, 45);
+            closeButton.TabIndex = 3;
+            closeButton.Text = "Close";
+            closeButton.UseVisualStyleBackColor = true;
+            closeButton.Click += closeButton_Click;
             // 
             // ExplanationLabel
             // 
-            this.ExplanationLabel.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.ExplanationLabel.Location = new System.Drawing.Point(12, 9);
-            this.ExplanationLabel.Name = "ExplanationLabel";
-            this.ExplanationLabel.Size = new System.Drawing.Size(595, 127);
-            this.ExplanationLabel.TabIndex = 1;
-            this.ExplanationLabel.Text = "Sanitizing the dictionary files will:\r\n- Format the XML,\r\n- Use UTF-8 (no BOM)\r\n-" +
-    " Remove duplicate translations,\r\n- Remove translations that don\'t exist in the l" +
-    "eading dictionary (en-us).";
+            ExplanationLabel.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right;
+            ExplanationLabel.Location = new System.Drawing.Point(16, 12);
+            ExplanationLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            ExplanationLabel.Name = "ExplanationLabel";
+            ExplanationLabel.Size = new System.Drawing.Size(793, 196);
+            ExplanationLabel.TabIndex = 1;
+            ExplanationLabel.Text = resources.GetString("ExplanationLabel.Text");
             // 
             // sanitizeButton
             // 
-            this.sanitizeButton.Location = new System.Drawing.Point(12, 159);
-            this.sanitizeButton.Name = "sanitizeButton";
-            this.sanitizeButton.Size = new System.Drawing.Size(161, 34);
-            this.sanitizeButton.TabIndex = 2;
-            this.sanitizeButton.Text = "Sanitize";
-            this.sanitizeButton.UseVisualStyleBackColor = true;
-            this.sanitizeButton.Click += new System.EventHandler(this.sanitizeButton_Click);
+            sanitizeButton.Location = new System.Drawing.Point(16, 212);
+            sanitizeButton.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            sanitizeButton.Name = "sanitizeButton";
+            sanitizeButton.Size = new System.Drawing.Size(215, 45);
+            sanitizeButton.TabIndex = 2;
+            sanitizeButton.Text = "Sanitize";
+            sanitizeButton.UseVisualStyleBackColor = true;
+            sanitizeButton.Click += sanitizeButton_Click;
             // 
             // errorsLabel
             // 
-            this.errorsLabel.AutoSize = true;
-            this.errorsLabel.Location = new System.Drawing.Point(12, 205);
-            this.errorsLabel.Name = "errorsLabel";
-            this.errorsLabel.Size = new System.Drawing.Size(62, 25);
-            this.errorsLabel.TabIndex = 4;
-            this.errorsLabel.Text = "Errors:";
-            this.errorsLabel.Visible = false;
+            errorsLabel.AutoSize = true;
+            errorsLabel.Location = new System.Drawing.Point(16, 261);
+            errorsLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            errorsLabel.Name = "errorsLabel";
+            errorsLabel.Size = new System.Drawing.Size(79, 32);
+            errorsLabel.TabIndex = 4;
+            errorsLabel.Text = "Errors:";
+            errorsLabel.Visible = false;
             // 
             // SanitizeForm
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(144F, 144F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
-            this.CancelButton = this.closeButton;
-            this.ClientSize = new System.Drawing.Size(619, 360);
-            this.Controls.Add(this.errorsLabel);
-            this.Controls.Add(this.sanitizeButton);
-            this.Controls.Add(this.ExplanationLabel);
-            this.Controls.Add(this.closeButton);
-            this.DoubleBuffered = true;
-            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
-            this.MaximizeBox = false;
-            this.MinimizeBox = false;
-            this.Name = "SanitizeForm";
-            this.ShowIcon = false;
-            this.ShowInTaskbar = false;
-            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
-            this.Text = "Sanitize dictionaries";
-            this.ResumeLayout(false);
-            this.PerformLayout();
-
+            AutoScaleDimensions = new System.Drawing.SizeF(192F, 192F);
+            AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
+            CancelButton = closeButton;
+            ClientSize = new System.Drawing.Size(825, 480);
+            Controls.Add(errorsLabel);
+            Controls.Add(sanitizeButton);
+            Controls.Add(ExplanationLabel);
+            Controls.Add(closeButton);
+            DoubleBuffered = true;
+            FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
+            Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            MaximizeBox = false;
+            MinimizeBox = false;
+            Name = "SanitizeForm";
+            ShowIcon = false;
+            ShowInTaskbar = false;
+            StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
+            Text = "Sanitize dictionaries";
+            ResumeLayout(false);
+            PerformLayout();
         }
 
         #endregion
